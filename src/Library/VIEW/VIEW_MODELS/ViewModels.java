@@ -9,20 +9,9 @@ public class ViewModels {
     public ViewModels(View v) {
         this.view = v;
     }
-    public static void wrongId(int sel)
-        {System.out.println("Введен некорректный ID : "+sel+". Попробуйте еще раз.");}
 
     public static String addLibrary(int maxID)
         {return Inputs.my_input_str("ID : "+(maxID+1)+". Название библиотеки : ");}
-
-    public static boolean confirmRemoveLibrary(String s){
-            boolean flag = false;
-            if (Inputs.my_input("Будет удалена : "+s+" (Да-1/Нет-0)",0,1)==1) {flag = true;}
-        return flag;}
-    public static boolean confirmSaveChangesLibrary(String s){
-        boolean flag = false;
-        if (Inputs.my_input("Были внесены изменения :\n"+s+"\nСохранить (Да-1/Нет-0)",0,1)==1) {flag = true;}
-        return flag;}
 
     public static void printMessage(String str){System.out.println(str);}
 
@@ -35,8 +24,8 @@ public class ViewModels {
         book.add(Inputs.my_input_str("Введите издательство : "));
         book.add(String.valueOf(Inputs.my_input("Введите кол-во страниц : ",1,5000)));
         book.add(String.valueOf(Inputs.my_input("Введите кол-во экземпляров : ",1,100)));
-        return book;
-    }
+        return book;}
+
     public static ArrayList<String> addListener(int maxListenerId){
         ArrayList<String> listener = new ArrayList<>();
         System.out.println("В реестр будет добавлен читатель с ID : "+(maxListenerId+1));
@@ -56,8 +45,8 @@ public class ViewModels {
         giveBook.add(String.valueOf(Inputs.my_input("Введите ID читателя для выдачи : ",minL_ID,maxL_ID)));
         giveBook.add(Inputs.my_input_str("Комментарий при выдаче : "));
         return giveBook;}
-    public static String[] returnBook(int minActiveOrdersId,int maxActiveOrdersId){
 
+    public static String[] returnBook(int minActiveOrdersId,int maxActiveOrdersId){
         String[] returnBook = new String[2];
         returnBook[0] = String.valueOf(Inputs.my_input("Введите ID заказа (выдачи) для осуществлния возврата : ",
                 minActiveOrdersId,maxActiveOrdersId));

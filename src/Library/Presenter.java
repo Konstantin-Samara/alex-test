@@ -7,81 +7,82 @@ import Library.MODELS.Models;
 
 import Library.MODELS.WriteRead;
 import Library.VIEW.VIEW_MODELS.Inputs;
-import Library.VIEW.VIEW_MODELS.ViewModels;
 
 import java.util.ArrayList;
 
 
 public class Presenter {
-View view = new View(this);
-ListLibrary listLibrary;
-Library library;
+View v = new View(this);
+Models m = new Models(this);
+private ListLibrary listLibrary;
+private Library library;
 
     public void pressButton() {
         if (Inputs.my_input("Загрузить из файла - 1/сформировать шаблон - 0 : ",0,1)==1) {
-            listLibrary = (ListLibrary) WriteRead.read("./src/Library/DATA/listlibrary.out");}
-        else {listLibrary = HandCreate.createLibrarys();}
-        view.getMainMenu(Models.getListLibrary(listLibrary));
+            setListLibrary((ListLibrary) WriteRead.read("./src/Library/DATA/listlibrary.out"));}
+        else {
+            setListLibrary(HandCreate.createLibrarys());}
+        v.getMainMenu(m.getListLibrary());
     }
-
-    public String giveBook(ArrayList<String> giveBook) {
-        return Models.giveBook(library,giveBook);}
+    public void printMessage(String s)
+        {v.printMessage(s);}
+    public boolean confirm(String s)
+        {return v.confirm(s);}
+    public String giveBook(ArrayList<String> giveBook)
+        {return m.giveBook(giveBook);}
     public String ReturnBook(String[] returnBook)
-        {return Models.returnBook(library,returnBook);}
+        {return m.returnBook(returnBook);}
     public String getCatalog()
-        {return Models.getCatalog(library);}
+        {return m.getCatalog();}
     public String getReestr()
-        {return Models.getReestr(library);}
-    public void close() {
-        if (library.getChangesLog().length()>0) {
-            if (ViewModels.confirmSaveChangesLibrary(library.getChangesLog())){
-                library.setChangesLog("");
-                WriteRead.save(library,library.getFileName());}
-            library.setChangesLog("");}
-    }
+        {return m.getReestr();}
+    public void close()
+        {m.close();}
     public String addBook(ArrayList<String> book)
-        {return Models.addBook(library,book);}
-
+        {return m.addBook(book);}
     public String addListener(ArrayList<String> listener)
-        {return Models.addListener(library,listener);}
-
+        {return m.addListener(listener);}
     public String removeBook(int sel)
-        {return Models.removeBook(library,sel);}
-
+        {return m.removeBook(sel);}
     public String removeListener(int sel)
-        {return Models.removeListener(library,sel);}
+        {return m.removeListener(sel);}
 
-    public void selectLibrary(int sel) {
-        if (listLibrary.checkId(sel)){
-            library = listLibrary.getLibraryFromId(sel);
-            view.getLibraryMenu(library.getName());}
-        else {ViewModels.wrongId(sel);}
-        pressButton();}
-
-    public void removeLibrary(int sel) {
-        if (listLibrary.checkId(sel))
-            if(ViewModels.confirmRemoveLibrary(listLibrary.getLibraryFromId(sel).getName()))
-                {Models.removeLibrary(listLibrary,sel);}
-        else {ViewModels.wrongId(sel);}}
+    public void selectLibrary(int sel)
+        {m.selectLibrary(sel);}
+    public void startLibraryMenu(String s)
+        {v.getLibraryMenu(s);}
+    public String removeLibrary(int sel)
+        {return m.removeLibrary(sel);}
 
     public void mergeLibrary() {System.out.println("mergeLibrary pressed");}
 
-    public void addLibrary(String s) {
-        Models.addLibrary(listLibrary,s);
-        selectLibrary(listLibrary.getMaxID()); }
-
-    public void exit() {System.out.println("exit pressed");}
-
+    public void addLibrary(String s)
+        {m.addLibrary(s);}
+    public void exit()
+        {System.out.println("exit pressed");}
     public String getList()
-        {return Models.getList(library);}
-    public String getInfoBook(int sel) {
-        return Models.getInfoBook(library,sel);
+        {return m.getList();}
+    public String getInfoBook(int sel)
+        {return m.getInfoBook(sel);}
+    public String getInfoListener(int sel)
+        {return m.getInfoListener(sel);}
+    public String getInfoOrder(int sel)
+        {return m.getInfoOrder(sel);}
+
+    public ListLibrary getListLibrary() {
+        return listLibrary;
     }
-    public String getInfoListener(int sel) {
-        return Models.getInfoListener(library,sel);
+
+    public void setListLibrary(ListLibrary listLibrary) {
+        this.listLibrary = listLibrary;
     }
-    public String getInfoOrder(int sel) {
-        return Models.getInfoOrder(library,sel);
+
+    public Library getLibrary() {
+        return library;
+    }
+
+    public void setLibrary(Library library) {
+        this.library = library;
     }
 }
 
