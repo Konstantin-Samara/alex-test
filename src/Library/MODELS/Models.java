@@ -45,10 +45,11 @@ public class Models {
                         if (file.delete()) {message = "Библиотека \""
                                 + p.getListLibrary().getNotes().get(i).getName() + "\" успешно удалена.";}
                         p.getListLibrary().getNotes().remove(p.getListLibrary().getNotes().get(i));
+                        if(sel == p.getListLibrary().getMaxID()){updateMaxIdLibrarys();}
                         WriteRead.save(p.getListLibrary(), "./src/Library/DATA/listlibrary.out");}
                 }
             }
-            else {message = "Удаление прервано.";}
+            else {message = "Удаление отменено.";}
         }
         else {message = wrongIdmessage(sel,3);}
     return message;
@@ -104,12 +105,19 @@ public class Models {
         String message = wrongIdmessage(sel,0);
         if (p.getLibrary().checkIdBook(sel)){
                 Book book = new Book();
-            for (int i = 0; i < p.getLibrary().getBooks().size(); i++) {
-                if (p.getLibrary().getBooks().get(i).getId() == sel) {
-                    book = p.getLibrary().getBooks().get(i);
-                    p.getLibrary().getBooks().remove(book);}}
-            message = "из каталога удалена "+book.toString() + " в кол-ве : " + book.getQuantity() + " экз.\n";
-            p.getLibrary().setChangesLog(p.getLibrary().getChangesLog() + message);}
+                for (int i = 0; i < p.getLibrary().getBooks().size(); i++) {
+                    if (p.getLibrary().getBooks().get(i).getId() == sel) {
+                        book = p.getLibrary().getBooks().get(i);
+//                        p.getLibrary().getBooks().remove(book);
+                    }}
+                if (p.confirm("из каталога будет удалена "+book.toString()
+                + " в кол-ве : " + book.getQuantity() + " экз.")){
+                    p.getLibrary().getBooks().remove(book);
+                    message = "из каталога удалена "+book.toString() + " в кол-ве : " + book.getQuantity() + " экз.\n";
+                    p.getLibrary().setChangesLog(p.getLibrary().getChangesLog() + message);
+                    if(sel==p.getLibrary().getBooksMaxId()){p.getLibrary().updateMaxIdBook();}}
+                else {message = "Удаление отменено.";}
+        }
         return message;}
 
     public String removeListener(int sel) {
@@ -119,24 +127,38 @@ public class Models {
         for (int i = 0; i < p.getLibrary().getListeners().size(); i++) {
             if (p.getLibrary().getListeners().get(i).getId() == sel) {
                 listener = p.getLibrary().getListeners().get(i);
-                p.getLibrary().getListeners().remove(listener);}}
-        message = "из реестра удален " + listener.toString() + "\n";
-            p.getLibrary().setChangesLog(p.getLibrary().getChangesLog() + message);}
-        return  message;}
+//                p.getLibrary().getListeners().remove(listener);
+            }}
+        if (p.confirm("из реестра будет удален " + listener.toString())){
+            p.getLibrary().getListeners().remove(listener);
+            message = "из реестра удален " + listener.toString();
+            p.getLibrary().setChangesLog(p.getLibrary().getChangesLog() + message);
+            if(sel==p.getLibrary().getListenerMaxId()){p.getLibrary().updateMaxIdListener();}}
+        else {message = "Удаление отменено.";}
+        }
+
+    return  message;}
 
     public String addListener(ArrayList<String> list) {
+        String message = "";
         boolean gender = false;
+        boolean flag = false;
         int id = Integer.valueOf(list.get(0));
         String firstName = list.get(1);
         String lastName = list.get(2);
         if (list.get(3).equals("1")) {gender = true;}
         String homeAdres = list.get(4);
         String phone = list.get(5);
-        p.getLibrary().setListenerMaxId(p.getLibrary().getListenerMaxId() + 1);
         Listener listener = new Listener(id, firstName, lastName, gender, homeAdres, phone);
-        p.getLibrary().getListeners().add(listener);
-        String message = "в реестр добавлен " + listener.toString() + "\n";
-        p.getLibrary().setChangesLog(p.getLibrary().getChangesLog() + message);
+        for (Listener item:p.getLibrary().getListeners()){
+            if (item.equals(listener)){
+                message = "Такой читатель уже есть в реестре данной библиотеки с ID : "
+                        +item.getId()+"\nДобавление прервано."; flag = true;}}
+        if (!flag){
+            p.getLibrary().setListenerMaxId(p.getLibrary().getListenerMaxId() + 1);
+            p.getLibrary().getListeners().add(listener);
+            message = "в реестр добавлен " + listener.toString() + "\n";
+            p.getLibrary().setChangesLog(p.getLibrary().getChangesLog() + message);}
         return message;}
 
     public String giveBook(ArrayList<String> giveBook) {
@@ -276,4 +298,10 @@ public class Models {
             p.startLibraryMenu(p.getLibrary().getName());}
         else {p.printMessage(wrongIdmessage(sel,3));}
         p.pressButton();}
+    public void updateMaxIdLibrarys(){
+        int max = 0;
+        for (NoteLibrary item:p.getListLibrary().getNotes()) {
+            if (max<item.getId()) {max = item.getId();}}
+        p.getListLibrary().setMaxID(max);
+    }
 }

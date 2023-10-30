@@ -9,15 +9,12 @@ public class HandCreate {
     public static ListLibrary listLibrary;
     public static ArrayList<Book> books;
     public static ArrayList<Listener> listeners;
-//    public static ArrayList<Order> orders;
 
     public static ListLibrary createListLibrary(){
         listLibrary = new ListLibrary();
         listLibrary.setMaxID(2);
         listLibrary.add(1,"Библиотека им. М.Ю.Ломоносова");
-//        listLibrary.add(2,"Библиотека им. В.И.Ленина");
         listLibrary.add(2,"Библиотека им. А.С.Пушкина");
-//        listLibrary.add(4,"Библиотека им. В.В. Путина");
 
         WriteRead.save(listLibrary,"./src/Library/DATA/listlibrary.out");
         return listLibrary;
@@ -64,13 +61,14 @@ public class HandCreate {
             librarys[i] = new Library(listLibrary.getNotes().get(i).getId(),
             listLibrary.getNotes().get(i).getName());
             librarys[i].setBooksMaxId(6);
+//            librarys[i].setBookMinId(1);
             librarys[i].setListenerMaxId(6);
+//            librarys[i].setListenerMinId(1);
             librarys[i].setOrdersMaxId(0);
 
             for (int j = 0; j < 6; j++) {
                 librarys[i].getBooks().add(books.get(i*6+j));
                 librarys[i].getListeners().add(listeners.get(i*6+j));
-//                librarys[i].getOrders().add(orders.get(i*3+j));
             }
         }
         for (int i = 0; i < 2; i++) {

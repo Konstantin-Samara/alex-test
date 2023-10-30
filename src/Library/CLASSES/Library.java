@@ -10,6 +10,8 @@ public class Library implements Serializable {
     private int booksMaxId;
     private int listenerMaxId;
     private int ordersMaxId;
+//    private int bookMinId;
+//    private int listenerMinId;
     private ArrayList<Book> books = new ArrayList<>();
     private ArrayList<Listener> listeners = new ArrayList<>();
     private ArrayList<Order> activeOrders = new ArrayList<>();
@@ -29,9 +31,6 @@ public class Library implements Serializable {
         {return getListenerFromId(order.getListenerId());}
     public Book getBookFromOrder(Order order)
         {return getBookFromId(order.getBookId());}
-//    public Listener getListenerFromOrderId(Order)
-//        {return getListenerFromOrder()}
-
     public Book getBookFromId(int id){
         Book book = new Book();
         for (Book item: getBooks()) {if (item.getId() ==id){book = item;}}
@@ -49,20 +48,43 @@ public class Library implements Serializable {
         Order order = new Order();
         for (Order item: getClosedOrders()) {if (item.getId() ==id){order = item;}}
         return order;}
+    public boolean checkIdBook(int sel) {
+        for (Book item:books) {if (item.getId()==sel){return true;}}
+        return false;}
 
-//    private String getOrderString(Order order){
-//        Book book = getBookFromId(order.getBookId());
-//        Listener listener = getListenerFromId(order.getListenerId());
-//        String bookName = book.getName()+" "+book.getAuthor();
-//        String listenerName = listener.getFirstName()+listener.getLastName();
-////        String status = "На руках";
-////        if (!order.isOnHand()){status = "Возвращена в библиотеку";}
-//        return "Выдача(ID : "+order.getId()+"). Книга(ID : "+order.getBookId()+") "
-//                +bookName+" выдана читателю(ID : "+ order.getListenerId()+") "
-//                +listenerName
-////                +". Статус : "+status
-//                ;}
+    public boolean checkIdListener(int sel) {
+        for (Listener item:listeners) {if (item.getId()==sel){return true;}}
+        return false;}
 
+    public  boolean checkIdActiveOrders(int sel) {
+        for (Order item:activeOrders) {if (item.getId()==sel){return true;}}
+        return false;}
+    public  boolean checkIdClosedOrders(int sel) {
+        for (Order item:closedOrders) {if (item.getId()==sel){return true;}}
+        return false;}
+//    public void updateMinIdBook(){
+//        int min = 0;
+//        for (Book item:books)
+//            {if (min>item.getId()) {min = item.getId();}}
+//        bookMinId = min;}
+    public void updateMaxIdBook(){
+        int max = 0;
+        for (Book item:books)
+            {if (max<item.getId()) {max = item.getId();}}
+        booksMaxId = max;
+    }
+//    public void updateMinIdListener(){
+//        int min = 0;
+//        for (Listener item:listeners)
+//            {if (min>item.getId()) {min = item.getId();}}
+//        listenerMinId = min;
+//    }
+    public void updateMaxIdListener(){
+        int max = 0;
+        for (Listener item:listeners)
+            {if (max<item.getId()) {max = item.getId();}}
+        listenerMaxId = max;
+    }
     public int getId() {
         return id;
     }
@@ -142,23 +164,6 @@ public class Library implements Serializable {
     public void setChangesLog(String changesLog) {
         this.changesLog = changesLog;
     }
-
-    public boolean checkIdBook(int sel) {
-        for (Book item:books) {if (item.getId()==sel){return true;}}
-        return false;}
-
-    public boolean checkIdListener(int sel) {
-        for (Listener item:listeners) {if (item.getId()==sel){return true;}}
-        return false;}
-
-    public  boolean checkIdActiveOrders(int sel) {
-        for (Order item:activeOrders) {if (item.getId()==sel){return true;}}
-        return false;}
-    public  boolean checkIdClosedOrders(int sel) {
-        for (Order item:closedOrders) {if (item.getId()==sel){return true;}}
-        return false;}
-
-
     public ArrayList<Order> getClosedOrders() {
         return closedOrders;
     }
@@ -166,6 +171,23 @@ public class Library implements Serializable {
     public void setClosedOrders(ArrayList<Order> closedOrders) {
         this.closedOrders = closedOrders;
     }
+
+//    public int getBookMinId() {
+//        return bookMinId;
+//    }
+//
+//    public void setBookMinId(int bookMinId) {
+//        this.bookMinId = bookMinId;
+//    }
+//
+//    public int getListenerMinId() {
+//        return listenerMinId;
+//    }
+//
+//    public void setListenerMinId(int listenerMinId) {
+//        this.listenerMinId = listenerMinId;
+//    }
+
 }
 
 
