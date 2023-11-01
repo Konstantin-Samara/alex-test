@@ -84,5 +84,8 @@ private Library library;
     public void setLibrary(Library library) {
         this.library = library;
     }
+
+    public String removeOneBook(int sel)
+        {return m.removeOneBook(sel);}
 }
 

@@ -42,8 +42,8 @@ public class Models {
                 {for (int i = 0; i < p.getListLibrary().getNotes().size(); i++) {
                     if (p.getListLibrary().getNotes().get(i).getId() == sel) {
                         File file = new File(p.getListLibrary().getNotes().get(i).getFileName());
-                        if (file.delete()) {message = "Библиотека \""
-                                + p.getListLibrary().getNotes().get(i).getName() + "\" успешно удалена.";}
+                        if (file.delete()) {message =
+                                p.getListLibrary().getNotes().get(i).getName()+"\" успешно удалена.";}
                         p.getListLibrary().getNotes().remove(p.getListLibrary().getNotes().get(i));
                         if(sel == p.getListLibrary().getMaxID()){updateMaxIdLibrarys();}
                         WriteRead.save(p.getListLibrary(), "./src/Library/DATA/listlibrary.out");}
@@ -95,28 +95,59 @@ public class Models {
         String manufacture = list.get(3);
         int pages = Integer.valueOf(list.get(4));
         int quantity = Integer.valueOf(list.get(5));
-        p.getLibrary().setBooksMaxId(p.getLibrary().getBooksMaxId() + 1);
-        p.getLibrary().getBooks().add(new Book(id, name, author, manufacture, pages, quantity));
-        message = "в каталог добавлена книга "+name+" "+author+" в кол-ве : "+quantity+" экз.\n";
-        p.getLibrary().setChangesLog(p.getLibrary().getChangesLog() + message);
+        Book newBook = new Book(id, name, author, manufacture, pages, quantity);
+        Book existBook = null;
+        for (Book item:p.getLibrary().getBooks()) {
+            if (newBook.equals(item)){existBook = item;}}
+        if (existBook!=null){
+            if (p.confirm("  Эта книга уже содержится в каталоге данной библиотеки с ID : "+
+                    existBook.getId()+" в кол-ве : "+existBook.getQuantity()+" экз.\n"+
+                    "Новые экземпляры ( "+newBook.getQuantity()+" экз.) будут добавлены к существующей :" +
+                    "\n  "+existBook.toString()+"\n"+"Общее кол-во в каталоге данной библиотеки составит "
+                    +(existBook.getQuantity()+newBook.getQuantity())+" экз.")){
+                p.getLibrary().getBookFromId(existBook.getId()).setQuantity(
+                        existBook.getQuantity()+newBook.getQuantity());
+                p.getLibrary().getBookFromId(existBook.getId()).setExist(
+                        existBook.getExist()+newBook.getQuantity());
+                message = "Новые экземпляры ( "+newBook.getQuantity()+" экз.) добавлены к существующей :\n  "+
+                        existBook.toString()+"\n";
+                p.getLibrary().setChangesLog(p.getLibrary().getChangesLog() + message);}
+            else {message = "Добавление отменено.";}
+    }
+        else {
+            p.getLibrary().setBooksMaxId(p.getLibrary().getBooksMaxId() + 1);
+            p.getLibrary().getBooks().add(newBook);
+            message = "в каталог добавлена книга "+name+" "+author+" в кол-ве : "+quantity+" экз.\n";
+            p.getLibrary().setChangesLog(p.getLibrary().getChangesLog() + message);}
         return message;}
 
     public String removeBook(int sel) {
         String message = wrongIdmessage(sel,0);
         if (p.getLibrary().checkIdBook(sel)){
-                Book book = new Book();
-                for (int i = 0; i < p.getLibrary().getBooks().size(); i++) {
-                    if (p.getLibrary().getBooks().get(i).getId() == sel) {
-                        book = p.getLibrary().getBooks().get(i);
-//                        p.getLibrary().getBooks().remove(book);
-                    }}
+            Book book = new Book();
+            for (int i = 0; i < p.getLibrary().getBooks().size(); i++) {
+                if (p.getLibrary().getBooks().get(i).getId() == sel) {
+                    book = p.getLibrary().getBooks().get(i);}}
+            if (book.getActiveOrdersId().size()==0){
                 if (p.confirm("из каталога будет удалена "+book.toString()
                 + " в кол-ве : " + book.getQuantity() + " экз.")){
                     p.getLibrary().getBooks().remove(book);
-                    message = "из каталога удалена "+book.toString() + " в кол-ве : " + book.getQuantity() + " экз.\n";
+                    message = "из каталога удалена "+book.toString() + " в кол-ве : "
+                            + book.getQuantity() + " экз.\n";
                     p.getLibrary().setChangesLog(p.getLibrary().getChangesLog() + message);
                     if(sel==p.getLibrary().getBooksMaxId()){p.getLibrary().updateMaxIdBook();}}
-                else {message = "Удаление отменено.";}
+                else {message = "Удаление отменено.";}}
+            else {
+                message = "Невзможно удалить из каталога книгу ( назв.: "+book.getName()+" авт.: "+book.getAuthor()+" )\n"+
+                "  пока есть экземпляры на руках у читателей :\n";
+                for (int item:book.getActiveOrdersId()) {
+                    message = message + "Выдача(ID : "+item+" ) "
+                            +p.getLibrary().getListenerFromOrder(
+                                    p.getLibrary().getActiveOrderFromId(item)).toString()+"\n";}
+                message = message+"Сначала необходимо все вернуть...\n";
+            }
+
+
         }
         return message;}
 
@@ -126,15 +157,24 @@ public class Models {
         Listener listener = new Listener();
         for (int i = 0; i < p.getLibrary().getListeners().size(); i++) {
             if (p.getLibrary().getListeners().get(i).getId() == sel) {
-                listener = p.getLibrary().getListeners().get(i);
-//                p.getLibrary().getListeners().remove(listener);
-            }}
-        if (p.confirm("из реестра будет удален " + listener.toString())){
-            p.getLibrary().getListeners().remove(listener);
-            message = "из реестра удален " + listener.toString();
-            p.getLibrary().setChangesLog(p.getLibrary().getChangesLog() + message);
-            if(sel==p.getLibrary().getListenerMaxId()){p.getLibrary().updateMaxIdListener();}}
-        else {message = "Удаление отменено.";}
+                listener = p.getLibrary().getListeners().get(i);}}
+        if (listener.getActiveOrdersId().size()==0){
+            if (p.confirm("из реестра будет удален " + listener.toString())){
+                p.getLibrary().getListeners().remove(listener);
+                message = "из реестра удален " + listener.toString();
+                p.getLibrary().setChangesLog(p.getLibrary().getChangesLog() + message);
+                if(sel==p.getLibrary().getListenerMaxId()){p.getLibrary().updateMaxIdListener();}}
+            else {message = "Удаление отменено.";}}
+        else{
+            message = "Невзможно удалить из реестра читателя ( имя : "+listener.getFirstName()+" фамилия : "
+                    +listener.getLastName()+" )\n"+
+                    "  пока у него на руках у есть книги :\n";
+            for (int item:listener.getActiveOrdersId()) {
+                message = message + "Выдача(ID : "+item+" ) "
+                        +p.getLibrary().getBookFromOrder(
+                        p.getLibrary().getActiveOrderFromId(item)).toString()+"\n";}
+            message = message+"Сначала необходимо все вернуть...\n";
+        }
         }
 
     return  message;}
@@ -194,9 +234,9 @@ public class Models {
             p.getLibrary().getBookFromId(order.getBookId()).getActiveOrdersId().add(order.getId());
             p.getLibrary().getBookFromId(order.getBookId()).setExist(p.getLibrary().getBookFromId(order.getBookId()).getExist()-1);
             p.getLibrary().getListenerFromId(order.getListenerId()).getActiveOrdersId().add(order.getId());
-            message = "\nКнига ("+p.getLibrary().getBookFromId(order.getBookId()).getName()
+            message = "Книга ("+p.getLibrary().getBookFromId(order.getBookId()).getName()
                     +") выдана читателю ("+p.getLibrary().getListenerFromId(order.getListenerId()).getFirstName() +
-                    " "+p.getLibrary().getListenerFromId(order.getListenerId()).getLastName()+").";
+                    " "+p.getLibrary().getListenerFromId(order.getListenerId()).getLastName()+").\n";
             p.getLibrary().setChangesLog(p.getLibrary().getChangesLog()+message);}
         else {message = message+"\nЗаказ не оформлен. Книга не выдана.";}
         return message; }
@@ -214,8 +254,8 @@ public class Models {
             p.getLibrary().getBookFromOrder(p.getLibrary().getActiveOrderFromId(sel)).setExist(book.getExist()+1);
             p.getLibrary().getActiveOrders().remove(p.getLibrary().getActiveOrderFromId(sel));
             p.getLibrary().getClosedOrders().add(order);
-            message = "\nВзврат книги "+book.getName()+" "+book.getAuthor()+" читателем "
-                    +listener.getFirstName()+" "+listener.getLastName()+" успешно осуществлен.";
+            message = "Возврат книги "+book.getName()+" "+book.getAuthor()+" читателем "
+                    +listener.getFirstName()+" "+listener.getLastName()+" осуществлен.\n";
             p.getLibrary().setChangesLog(p.getLibrary().getChangesLog()+message);}
         else {message = wrongIdmessage(sel,2);}
         return message;}
@@ -304,4 +344,43 @@ public class Models {
             if (max<item.getId()) {max = item.getId();}}
         p.getListLibrary().setMaxID(max);
     }
+
+    public String removeOneBook(int sel) {
+        String message = wrongIdmessage(sel,0);
+
+        if (p.getLibrary().checkIdBook(sel)){
+            Book book = new Book();
+            for (int i = 0; i < p.getLibrary().getBooks().size(); i++) {
+                if (p.getLibrary().getBooks().get(i).getId() == sel) {
+                    book = p.getLibrary().getBooks().get(i);}}
+            if (book.getExist()>0){
+                if (p.confirm("Будет утилизирован 1 экземпляр "+book.toString())){
+                    if (book.getQuantity()>1){
+                        p.getLibrary().getBookFromId(sel).setExist(book.getExist()-1);
+                        p.getLibrary().getBookFromId(sel).setQuantity(book.getQuantity()-1);
+                        message = "Утилизирован 1 экземпляр "+book.toString()+ ".\n";
+                        p.getLibrary().setChangesLog(p.getLibrary().getChangesLog() + message);}
+                    else{
+                        if (p.confirm("Это единственный экземпляр в библиотеке. \n" +
+                                "  "+book.toString()+" будет удалена из каталога целиком")){
+                            if(p.getLibrary().getBooks().remove(book)) {
+                                message = "Удален единственный экземпляр и из каталога целиком удалена :\n"
+                                +book.toString();
+                                p.getLibrary().setChangesLog(p.getLibrary().getChangesLog() + message);
+                                if(sel==p.getLibrary().getBooksMaxId()){p.getLibrary().updateMaxIdBook();}}
+                            else {message = "Удаление почему-то не прошло...";}}
+                        else{message = "Удаление отменено.";}}}
+                else {message = "Удаление отменено.";}}
+            else {
+                message = "В наличии нет экз.( "+book.getName()+" "+book.getAuthor()+" ),\n" +
+                    "  доступных для удаления. Все экземпляры на руках у читателей :\n";
+                for (int item:book.getActiveOrdersId()) {
+                    message = message + "Выдача(ID : "+item+" ) "
+                            +p.getLibrary().getListenerFromOrder(
+                            p.getLibrary().getActiveOrderFromId(item)).toString()+"\n";}
+                message = message+"Сначала необходимо что-нибудь вернуть...\n";}}
+
+        return message;}
+
+
 }

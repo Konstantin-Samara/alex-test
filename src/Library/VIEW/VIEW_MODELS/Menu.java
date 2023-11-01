@@ -22,29 +22,36 @@ public class Menu {
         commands.add(giveBook);
         ReturnBook returnBook = new ReturnBook(view);
         commands.add(returnBook);
-
         GetCatalog getCatalog = new GetCatalog(view);
         commands.add(getCatalog);
-        GetReestr getReestr = new GetReestr(view);
-        commands.add(getReestr);
-        GetList getList = new GetList(view);
-        commands.add(getList);
-
         GetInfoBook getInfoBook = new GetInfoBook(view);
         commands.add(getInfoBook);
-        GetInfoListener getInfoListener = new GetInfoListener(view);
-        commands.add(getInfoListener);
-        GetInfoOrder getInfoOrder = new GetInfoOrder(view);
-        commands.add(getInfoOrder);
-
         AddBook addBook = new AddBook(view);
         commands.add(addBook);
         RemoveBook removeBook = new RemoveBook(view);
         commands.add(removeBook);
+        RemoveOneBook removeOneBook = new RemoveOneBook(view);
+        commands.add(removeOneBook);
+
+//        view.presenter.getLibrary().getBooks();
+//        view.presenter.getLibrary().getListeners();
+//        view.presenter.getLibrary().getActiveOrders();
+
+
+
+        GetReestr getReestr = new GetReestr(view);
+        commands.add(getReestr);
+        GetInfoListener getInfoListener = new GetInfoListener(view);
+        commands.add(getInfoListener);
         AddListener addListener = new AddListener(view);
         commands.add(addListener);
         RemoveListener removeListener = new RemoveListener(view);
         commands.add(removeListener);
+
+        GetList getList = new GetList(view);
+        commands.add(getList);
+        GetInfoOrder getInfoOrder = new GetInfoOrder(view);
+        commands.add(getInfoOrder);
         Close close = new Close(view);
         commands.add(close);
 

@@ -7,7 +7,7 @@ import Library.VIEW.VIEW_MODELS.Inputs;
 
 
 public class View {
-    Presenter presenter;
+    public Presenter presenter;
     View(Presenter p){
         this.presenter = p;
     }
@@ -123,15 +123,7 @@ public class View {
         else {ViewModels.printMessage("У вас нет доступных библиотек. Нечего удалять.");}
         presenter.pressButton();}
 
-    public void mergeLibrary() {
-        if (presenter.getListLibrary().getNotes().size() > 1){
-
-            presenter.mergeLibrary();
-
-        }
-        else {ViewModels.printMessage("Недостаточно доступных библиотек для объединения.");}
-        presenter.pressButton();
-    }
+    public void mergeLibrary() {presenter.mergeLibrary();}
 
     public void addLibrary() {
         String s = ViewModels.addLibrary(presenter.getListLibrary().getMaxID());
@@ -142,4 +134,20 @@ public class View {
 
     public void getList()
         {ViewModels.printMessage(presenter.getList());}
+
+    public void removeOneBook() {
+        if(presenter.getLibrary().getBooks().size()>0){
+            int minBookId = presenter.getLibrary().getBooks().get(0).getId();
+            int maxBookId = presenter.getLibrary().getBooksMaxId();
+            int sel = Inputs.my_input("Введите ID книги для удаления экземпляра : ",minBookId,maxBookId);
+            ViewModels.printMessage(presenter.removeOneBook(sel));}
+        else {ViewModels.printMessage("Добавьте книги в каталог. Пока в нем пусто. Удалять нечего.");}}
+
+    public void editListener() {
+
+    }
+
+    public void editBook() {
+
+    }
 }
