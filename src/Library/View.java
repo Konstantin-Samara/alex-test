@@ -4,6 +4,7 @@ import Library.VIEW.VIEW_MODELS.Menu;
 import Library.VIEW.VIEW_MODELS.ViewModels;
 import Library.VIEW.VIEW_MODELS.Inputs;
 
+import java.util.ArrayList;
 
 
 public class View {
@@ -143,11 +144,35 @@ public class View {
             ViewModels.printMessage(presenter.removeOneBook(sel));}
         else {ViewModels.printMessage("Добавьте книги в каталог. Пока в нем пусто. Удалять нечего.");}}
 
-    public void editListener() {
-
-    }
-
     public void editBook() {
+        if(presenter.getLibrary().getBooks().size()>0){
+            int minBookId = presenter.getLibrary().getBooks().get(0).getId();
+            int maxBookId = presenter.getLibrary().getBooksMaxId();
+            int sel = Inputs.my_input("Введите ID книги для редактирования : ",minBookId,maxBookId);
+            ViewModels.printMessage(presenter.getBookInStrList(sel));}
+        else {ViewModels.printMessage("Добавьте книги в каталог. Пока в нем пусто. Редактировать нечего.");}}
+    public void editListener() {
+        if (presenter.getLibrary().getListeners().size() > 0){
+            int minListenerId = presenter.getLibrary().getListeners().get(0).getId();
+            int maxListenerId = presenter.getLibrary().getListenerMaxId();
+            int sel = Inputs.my_input("Введите ID читателя для редактирования : ",minListenerId,maxListenerId);
+            ViewModels.printMessage(presenter.getListenerInStrList(sel));}
+        else {ViewModels.printMessage("Добавьте читателей в реестр. Пока в нем пусто. Редактировать некого.");}}
 
-    }
+    public ArrayList<String> startBookEditForm() {
+        ArrayList<String> list = new ArrayList<>();
+        list.add(Inputs.my_input_str("  Название       : "));
+        list.add(Inputs.my_input_str("  Автор          : "));
+        list.add(Inputs.my_input_str("  Издательство   : "));
+        list.add(String.valueOf(Inputs.my_input("  Кол-во страниц : ",1,5000)));
+        return list;}
+
+    public ArrayList<String> startListenerEditForm() {
+        ArrayList<String> list = new ArrayList<>();
+        list.add(Inputs.my_input_str("  Фамилия             : "));
+        list.add(Inputs.my_input_str("  Имя                 : "));
+        list.add(String.valueOf(Inputs.my_input("  Пол (1-муж./2-жен.) : ",1,2)));
+        list.add(Inputs.my_input_str("  Домашний адрес      : "));
+        list.add(Inputs.my_input_str("  Телефон             : "));
+        return list;}
 }

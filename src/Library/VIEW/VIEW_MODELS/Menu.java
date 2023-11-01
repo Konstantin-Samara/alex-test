@@ -2,6 +2,8 @@ package Library.VIEW.VIEW_MODELS;
 
 import Library.VIEW.Command;
 import Library.VIEW.LIBRARY_MENU_COMMANDS.*;
+import Library.VIEW.LIBRARY_MENU_COMMANDS.BOOK_COMMANDS.*;
+import Library.VIEW.LIBRARY_MENU_COMMANDS.LISTENER_COMMANDS.*;
 import Library.VIEW.MAIN_MENU_COMMANDS.*;
 import Library.View;
 
@@ -22,6 +24,11 @@ public class Menu {
         commands.add(giveBook);
         ReturnBook returnBook = new ReturnBook(view);
         commands.add(returnBook);
+        GetList getList = new GetList(view);
+        commands.add(getList);
+        GetInfoOrder getInfoOrder = new GetInfoOrder(view);
+        commands.add(getInfoOrder);
+
         GetCatalog getCatalog = new GetCatalog(view);
         commands.add(getCatalog);
         GetInfoBook getInfoBook = new GetInfoBook(view);
@@ -32,6 +39,8 @@ public class Menu {
         commands.add(removeBook);
         RemoveOneBook removeOneBook = new RemoveOneBook(view);
         commands.add(removeOneBook);
+        EditBook editBook = new EditBook(view);
+        commands.add(editBook);
 
 //        view.presenter.getLibrary().getBooks();
 //        view.presenter.getLibrary().getListeners();
@@ -47,11 +56,10 @@ public class Menu {
         commands.add(addListener);
         RemoveListener removeListener = new RemoveListener(view);
         commands.add(removeListener);
+        EditListener editListener = new EditListener(view);
+        commands.add(editListener);
 
-        GetList getList = new GetList(view);
-        commands.add(getList);
-        GetInfoOrder getInfoOrder = new GetInfoOrder(view);
-        commands.add(getInfoOrder);
+
         Close close = new Close(view);
         commands.add(close);
 

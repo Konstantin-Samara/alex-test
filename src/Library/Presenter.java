@@ -22,12 +22,13 @@ private Library library;
             setListLibrary((ListLibrary) WriteRead.read("./src/Library/DATA/listlibrary.out"));}
         else {
             setListLibrary(HandCreate.createLibrarys());}
-        v.getMainMenu(m.getListLibrary());
-    }
+        v.getMainMenu(m.getListLibrary());}
     public void printMessage(String s)
         {v.printMessage(s);}
     public boolean confirm(String s)
         {return v.confirm(s);}
+//    public String getInputStr(String s)
+//        {return v.getInputStr(s);}
     public String giveBook(ArrayList<String> giveBook)
         {return m.giveBook(giveBook);}
     public String ReturnBook(String[] returnBook)
@@ -87,5 +88,16 @@ private Library library;
 
     public String removeOneBook(int sel)
         {return m.removeOneBook(sel);}
+
+    public String getBookInStrList(int sel)
+        {return m.getBookInStrList(sel);}
+    public String getListenerInStrList(int sel)
+    {return m.getListenerInStrList(sel);}
+
+    public ArrayList<String> startBookEditForm()
+        {return v.startBookEditForm();}
+
+    public ArrayList<String> startListenerEditForm()
+        {return v.startListenerEditForm();}
 }
 

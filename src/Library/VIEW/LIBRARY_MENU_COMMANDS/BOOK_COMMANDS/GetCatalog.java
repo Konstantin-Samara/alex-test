@@ -1,4 +1,4 @@
-package Library.VIEW.LIBRARY_MENU_COMMANDS;
+package Library.VIEW.LIBRARY_MENU_COMMANDS.BOOK_COMMANDS;
 
 import Library.VIEW.Command;
 import Library.View;

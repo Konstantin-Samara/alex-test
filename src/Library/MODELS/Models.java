@@ -383,4 +383,84 @@ public class Models {
         return message;}
 
 
+    public String getBookInStrList(int sel) {
+        String message = wrongIdmessage(sel,0);
+        if (p.getLibrary().checkIdBook(sel)){
+            Book book = p.getLibrary().getBookFromId(sel);
+            message = "Отредактирована "+book.toString()+" :\n";
+            boolean test  =false;
+            p.printMessage("Редактируется книга с ID : "+book.getId()+
+            "\n  Название       : "+book.getName()+
+            "\n  Автор          : "+book.getAuthor()+
+            "\n  Издательство   : "+book.getManufacture()+
+            "\n  Кол-во страниц : "+book.getPages()+
+            "\nВведите новые параметры (ENTER - оставить прежнее значение): ");
+            ArrayList<String> list = p.startBookEditForm();
+            System.out.println(list.toString());
+            if (list.get(0)!=""){
+                test = true;
+                message = message+"  изменено имя : "+book.getName()+" --> "+list.get(0)+"\n";
+                p.getLibrary().getBookFromId(sel).setName(list.get(0));}
+            if (list.get(1)!=""){
+                test = true;
+                message = message+"  изменен автор : "+book.getAuthor()+" --> "+list.get(1)+"\n";
+                p.getLibrary().getBookFromId(sel).setAuthor(list.get(1));}
+            if (list.get(2)!=""){
+                test = true;
+                message = message+"  изменено издательство : "+book.getManufacture()+" --> "+list.get(2)+"\n";
+                p.getLibrary().getBookFromId(sel).setManufacture(list.get(2));}
+            if (!list.get(3).equals("0")){
+                test = true;
+                message = message+"  изменено кол-во страниц : "+book.getPages()+" --> "+list.get(3)+"\n";
+                p.getLibrary().getBookFromId(sel).setPages(Integer.valueOf(list.get(3)));}
+            if (test){p.getLibrary().setChangesLog(p.getLibrary().getChangesLog() + message);}
+            else {message = book.toString()+" не изменена.";}
+        }
+        return message;}
+    public String getListenerInStrList(int sel){
+        String message = wrongIdmessage(sel,1);
+        if (p.getLibrary().checkIdListener(sel)){
+            Listener listener = p.getLibrary().getListenerFromId(sel);
+            String strOldGend = "Женский";
+            String strNewGend = "Женский";
+            boolean gender = false;
+            boolean newGender = false;
+            if (listener.isGender()){strOldGend = "Мужской";gender = true;}
+            message = "Отредактирован "+listener.toString()+" :\n";
+            boolean test  =false;
+            p.printMessage("Редактируется читатель с ID : "+listener.getId()+
+                    "\n  Фамилия        : "+listener.getLastName()+
+                    "\n  Имя            : "+listener.getFirstName()+
+                    "\n  Пол            : "+strOldGend+
+                    "\n  Домашний адрес : "+listener.getHomeAdress()+
+                    "\n  Телефон        : "+listener.getPhone()+
+                    "\nВведите новые параметры (ENTER - оставить прежнее значение): ");
+            ArrayList<String> list = p.startListenerEditForm();
+            if (list.get(2).equals("1")){strNewGend = "Мужской";newGender = true;}
+            if (list.get(0)!=""){
+                test = true;
+                message = message+"  изменена фамилия : "+listener.getLastName()+" --> "+list.get(0)+"\n";
+                p.getLibrary().getListenerFromId(sel).setLastName(list.get(0));}
+            if (list.get(1)!=""){
+                test = true;
+                message = message+"  изменено имя : "+listener.getFirstName()+" --> "+list.get(1)+"\n";
+                p.getLibrary().getListenerFromId(sel).setFirstName(list.get(1));}
+            if (!list.get(2).equals("0")){
+                test = true;
+                message = message+"  изменен пол : "+strOldGend+" --> "+strNewGend+"\n";
+                p.getLibrary().getListenerFromId(sel).setGender(newGender);}
+            if (list.get(3)!=""){
+                test = true;
+                message = message+"  изменен домашний адрес : "+listener.getHomeAdress()+" --> "+list.get(3)+"\n";
+                p.getLibrary().getListenerFromId(sel).setHomeAdress(list.get(3));}
+            if (list.get(4)!=""){
+                test = true;
+                message = message+"  изменен телефон : "+listener.getPhone()+" --> "+list.get(4)+"\n";
+                p.getLibrary().getListenerFromId(sel).setPhone(list.get(4));}
+
+            if (test){p.getLibrary().setChangesLog(p.getLibrary().getChangesLog() + message);}
+            else {message = listener.toString()+" не изменен.";}
+        }
+        return message;
+    }
 }
