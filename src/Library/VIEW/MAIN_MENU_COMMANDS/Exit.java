@@ -10,7 +10,7 @@ public class Exit implements Command {
     }
     @Override
     public String label() {
-        return "Выйти";
+        return "Выйти(ENTER)";
     }
 
     @Override

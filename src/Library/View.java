@@ -175,4 +175,14 @@ public class View {
         list.add(Inputs.my_input_str("  Домашний адрес      : "));
         list.add(Inputs.my_input_str("  Телефон             : "));
         return list;}
+
+    public void BookMenu() {
+        Menu menu = new Menu(this);
+        menu.getBookMenu(presenter.getLibrary().getName());
+    }
+
+    public void ListenerMenu() {
+        Menu menu = new Menu(this);
+        menu.getListenerMenu(presenter.getLibrary().getName());
+    }
 }
