@@ -50,13 +50,14 @@ public class Menu {
     public List<Command> createMainMenu(){
 
         List<Command> commands = new ArrayList<>();
-        AddLibrary addLibrary = new AddLibrary(view);
-        commands.add(addLibrary);
+
         if(view.presenter.getListLibrary().getNotes().size()>0){
             SelectLibrary selectLibrary = new SelectLibrary(view);
             commands.add(selectLibrary);
             RemoveLibrary removeLibrary = new RemoveLibrary(view);
             commands.add(removeLibrary);}
+        AddLibrary addLibrary = new AddLibrary(view);
+        commands.add(addLibrary);
         if(view.presenter.getListLibrary().getNotes().size()>1){
             MergeLibrary mergeLibrary = new MergeLibrary(view);
             commands.add(mergeLibrary);}
