@@ -25,7 +25,7 @@ public class Listener implements Serializable, Comparable<Listener> {
     public String toString(){
         String str = "жен.";
         if (gender) {str = "муж.";}
-        return "читатель(ID : "+getId() +" ) имя : "+ getFirstName() +" фамилия : "+ getLastName() +" пол : "+
+        return "читатель(ID : "+getId() +" ) фамилия : "+ getLastName() +" имя : "+ getFirstName() +" пол : "+
                 str +" тел : "+ getPhone();}
     public boolean equals(Listener l1){
         return getFirstName().equals(l1.getFirstName())&& getLastName().equals(l1.getLastName())

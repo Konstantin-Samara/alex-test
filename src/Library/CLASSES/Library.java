@@ -10,8 +10,7 @@ public class Library implements Serializable {
     private int booksMaxId;
     private int listenerMaxId;
     private int ordersMaxId;
-//    private int bookMinId;
-//    private int listenerMinId;
+
     private ArrayList<Book> books = new ArrayList<>();
     private ArrayList<Listener> listeners = new ArrayList<>();
     private ArrayList<Order> activeOrders = new ArrayList<>();
