@@ -44,7 +44,7 @@ public class Menu {
             System.out.println("Выбранная библиотека : "+s);
             for (int i = 0; i < commands.size(); i++)
                 {System.out.println(i+1+". "+commands.get(i).label());}
-            sel = Inputs.my_input("Выберите пункт меню : ",1,commands.size());
+            sel = Inputs.my_input(true,"Выберите пункт меню : ",1,commands.size());
             if (sel!=0) {commands.get(sel-1).execute();}}}
 
     public List<Command> createMainMenu(){
@@ -71,9 +71,8 @@ public class Menu {
             commands = createMainMenu();
             System.out.println("Список доступных библиотек : \n"+str);
             for (int i = 0; i < commands.size(); i++) {
-                System.out.println(i+1+". "+commands.get(i).label());
-            }
-            sel = Inputs.my_input("Выберите пункт меню : ",1,commands.size());
+                System.out.println(i+1+". "+commands.get(i).label());}
+            sel = Inputs.my_input(true,"Выберите пункт меню : ",1,commands.size());
             if (sel!=0) {commands.get(sel-1).execute();}
     }
     public List<Command> createBookMenu(){
@@ -100,12 +99,12 @@ public class Menu {
         int sel = -1;
         while (sel!=commands.size()+1) {
             commands = createBookMenu();
-            System.out.println("РАОТАЕМ С КАТАЛОГОМ КНИГ ( "+s+" )");
+            System.out.println("РАБОТАЕМ С КАТАЛОГОМ КНИГ ( "+s+" )");
             for (int i = 0; i < commands.size(); i++) {
                 System.out.println(i+1+". "+commands.get(i).label());
             }
             System.out.println((commands.size()+1)+". Вернутся в меню библиотеки");
-            sel = Inputs.my_input("Выберите пункт меню : ",1,commands.size()+1);
+            sel = Inputs.my_input(true,"Выберите пункт меню : ",1,commands.size()+1);
             if ((sel!=commands.size()+1&&(sel!=0))){commands.get(sel-1).execute();}
         }
     }
@@ -130,12 +129,12 @@ public class Menu {
         int sel = -1;
         while (sel!=commands.size()+1) {
             commands = createListenerMenu();
-            System.out.println("РАОТАЕМ С РЕЕСТРОМ ЧИТАТЕЛЕЙ ( "+s+" )");
+            System.out.println("РАБОТАЕМ С РЕЕСТРОМ ЧИТАТЕЛЕЙ ( "+s+" )");
             for (int i = 0; i < commands.size(); i++) {
                 System.out.println(i+1+". "+commands.get(i).label());
             }
             System.out.println((commands.size()+1)+". Вернутся в меню библиотеки");
-            sel = Inputs.my_input("Выберите пункт меню : ",1,commands.size()+1);
+            sel = Inputs.my_input(true,"Выберите пункт меню : ",1,commands.size()+1);
             if ((sel!=commands.size()+1)&&(sel!=0)){commands.get(sel-1).execute();}
         }
     }

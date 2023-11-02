@@ -10,7 +10,7 @@ public class AddBook implements Command {
     }
     @Override
     public String label() {
-        return "Добаить книгу";
+        return "Добавить книгу";
     }
 
     @Override

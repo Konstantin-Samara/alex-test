@@ -10,7 +10,7 @@ public class AddLibrary implements Command {
     }
     @Override
     public String label() {
-        return "Доавить библиотеку";
+        return "Добавить библиотеку";
     }
 
     @Override

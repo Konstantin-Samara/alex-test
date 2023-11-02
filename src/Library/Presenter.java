@@ -18,17 +18,16 @@ private ListLibrary listLibrary;
 private Library library;
 
     public void pressButton() {
-        if (Inputs.my_input("Загрузить из файла - 1/сформировать шаблон - 0 : ",0,1)==1) {
-            setListLibrary((ListLibrary) WriteRead.read("./src/Library/DATA/listlibrary.out"));}
-        else {
-            setListLibrary(HandCreate.createLibrarys());}
+        setListLibrary((ListLibrary) WriteRead.read("./src/Library/DATA/listlibrary.out"));
+//        if (Inputs.my_input("Загрузить из файла - 1/сформировать шаблон - 0 : ",0,1)==1) {
+//            setListLibrary((ListLibrary) WriteRead.read("./src/Library/DATA/listlibrary.out"));}
+//        else {
+//            setListLibrary(HandCreate.createLibrarys());}
         v.getMainMenu(m.getListLibrary());}
     public void printMessage(String s)
         {v.printMessage(s);}
     public boolean confirm(String s)
         {return v.confirm(s);}
-//    public String getInputStr(String s)
-//        {return v.getInputStr(s);}
     public String giveBook(ArrayList<String> giveBook)
         {return m.giveBook(giveBook);}
     public String ReturnBook(String[] returnBook)
@@ -47,7 +46,6 @@ private Library library;
         {return m.removeBook(sel);}
     public String removeListener(int sel)
         {return m.removeListener(sel);}
-
     public void selectLibrary(int sel)
         {m.selectLibrary(sel);}
     public void startLibraryMenu(String s)
@@ -60,7 +58,7 @@ private Library library;
     public void addLibrary(String s)
         {m.addLibrary(s);}
     public void exit()
-        {System.out.println("exit pressed");}
+        {v.printMessage("До встречи!");}
     public String getList()
         {return m.getList();}
     public String getInfoBook(int sel)
@@ -88,15 +86,12 @@ private Library library;
 
     public String removeOneBook(int sel)
         {return m.removeOneBook(sel);}
-
-    public String getBookInStrList(int sel)
-        {return m.getBookInStrList(sel);}
-    public String getListenerInStrList(int sel)
-    {return m.getListenerInStrList(sel);}
-
+    public String editBook(int sel)
+        {return m.editBook(sel);}
+    public String editListener(int sel)
+    {return m.editListener(sel);}
     public ArrayList<String> startBookEditForm()
         {return v.startBookEditForm();}
-
     public ArrayList<String> startListenerEditForm()
         {return v.startListenerEditForm();}
 }

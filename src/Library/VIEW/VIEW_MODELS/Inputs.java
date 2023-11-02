@@ -3,7 +3,7 @@ package Library.VIEW.VIEW_MODELS;
 import java.util.Scanner;
 
 public class Inputs {
-    public static int my_input(String str, int n1, int n2) {
+    public static int my_input(boolean need,String str, int n1, int n2) {
         int inp = 0;
         boolean test = true;
         Scanner scan = new Scanner(System.in);
@@ -23,16 +23,28 @@ public class Inputs {
                     else {
                         test = true;
                         System.out.println("Число от "+n1+" до "+n2+". попробуйте еще раз.");}}}
-            else {test = false;}
-
+            else {if(!need) {test = false;}
+                  else {System.out.println("Поле обязательно для заполнения...");}}
         }
         return inp;}
 
-    public static String my_input_str(String s){
+    public static String my_input_str(boolean need,String s){
         String str = "";
-        Scanner scan = new Scanner(System.in);
-        System.out.print(s);
-        str = scan.nextLine();
+        if (!need){
+            Scanner scan = new Scanner(System.in);
+            System.out.print(s);
+            str = scan.nextLine();}
+        else {
+            boolean test = true;
+            while (test) {
+                Scanner scan = new Scanner(System.in);
+                System.out.print(s);
+                str = scan.nextLine();
+                if (!str.equals("")){test = false;}
+                else {System.out.println("Поле обязательно для заполнения...");}
+            }
+        }
+
         return str;
     }
 }

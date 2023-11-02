@@ -2,18 +2,21 @@ package Library.MODELS;
 
 import Library.CLASSES.*;
 import Library.*;
+import Library.MODELS.BOOK_MODELS.*;
+import Library.MODELS.LIBRARY_MODELS.*;
+import Library.MODELS.LISTENER_MODELS.AddListener;
+import Library.MODELS.LISTENER_MODELS.EditListener;
+import Library.MODELS.LISTENER_MODELS.GetInfoListener;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 
 public class Models {
     Presenter p;
     public Models(Presenter presenter){this.p = presenter;}
 
-    public String wrongIdmessage(int sel, int spec){
+    public static String wrongIdmessage(int sel, int spec){
         ArrayList<String>str = new ArrayList<>();
         str.add(
             "Книга с указанным ID( "+sel+" ) отсутствует в каталоге данной библиотеки.\n" +
@@ -52,8 +55,7 @@ public class Models {
             else {message = "Удаление отменено.";}
         }
         else {message = wrongIdmessage(sel,3);}
-    return message;
-    }
+    return message;}
 
     public void addLibrary(String s) {
         p.getListLibrary().add(p.getListLibrary().getMaxID() + 1, s);
@@ -63,202 +65,29 @@ public class Models {
         WriteRead.save(library1, library1.getFileName());
         p.selectLibrary(p.getListLibrary().getMaxID());}
 
-
     public String getCatalog() {
-        String str = "";
-        ArrayList<Book> books = new ArrayList<>();
-        for (Book item:p.getLibrary().getBooks()) {books.add(item);}
-        Collections.sort(books, new Comparator<Book>() {
-            @Override
-            public int compare(Book o1, Book o2) {return o1.getName().compareTo(o2.getName());}});
-        for (Book item:books) {str = str+"\n"+item.toString();}
-        return str;}
+        return GetCatalog.getCatalog(p);}
 
     public String getReestr() {
-        String str = "";
-        ArrayList<Listener> listeners = new ArrayList<>();
-        for (Listener item:p.getLibrary().getListeners()) {listeners.add(item);}
-        Collections.sort(listeners, new Comparator<Listener>() {
-            @Override
-            public int compare(Listener o1, Listener o2) {
-                if (!o1.getLastName().equals(o2.getLastName())){
-                    return o1.getLastName().compareTo(o2.getLastName());}
-                return o1.getFirstName().compareTo(o2.getFirstName());}});
-        for (Listener item : listeners) {str = str+"\n"+item.toString();}
-        return str;}
+        return GetReestr.getReestr(p);}
 
     public String addBook(ArrayList<String> list) {
-        int id = Integer.valueOf(list.get(0));
-        String message = "";
-        String name = list.get(1);
-        String author = list.get(2);
-        String manufacture = list.get(3);
-        int pages = Integer.valueOf(list.get(4));
-        int quantity = Integer.valueOf(list.get(5));
-        Book newBook = new Book(id, name, author, manufacture, pages, quantity);
-        Book existBook = null;
-        for (Book item:p.getLibrary().getBooks()) {
-            if (newBook.equals(item)){existBook = item;}}
-        if (existBook!=null){
-            if (p.confirm("  Эта книга уже содержится в каталоге данной библиотеки с ID : "+
-                    existBook.getId()+" в кол-ве : "+existBook.getQuantity()+" экз.\n"+
-                    "Новые экземпляры ( "+newBook.getQuantity()+" экз.) будут добавлены к существующей :" +
-                    "\n  "+existBook.toString()+"\n"+"Общее кол-во в каталоге данной библиотеки составит "
-                    +(existBook.getQuantity()+newBook.getQuantity())+" экз.")){
-                p.getLibrary().getBookFromId(existBook.getId()).setQuantity(
-                        existBook.getQuantity()+newBook.getQuantity());
-                p.getLibrary().getBookFromId(existBook.getId()).setExist(
-                        existBook.getExist()+newBook.getQuantity());
-                message = "Новые экземпляры ( "+newBook.getQuantity()+" экз.) добавлены к существующей :\n  "+
-                        existBook.toString()+"\n";
-                p.getLibrary().setChangesLog(p.getLibrary().getChangesLog() + message);}
-            else {message = "Добавление отменено.";}
-    }
-        else {
-            p.getLibrary().setBooksMaxId(p.getLibrary().getBooksMaxId() + 1);
-            p.getLibrary().getBooks().add(newBook);
-            message = "в каталог добавлена книга "+name+" "+author+" в кол-ве : "+quantity+" экз.\n";
-            p.getLibrary().setChangesLog(p.getLibrary().getChangesLog() + message);}
-        return message;}
+        return AddBook.addBook(p,list);}
 
     public String removeBook(int sel) {
-        String message = wrongIdmessage(sel,0);
-        if (p.getLibrary().checkIdBook(sel)){
-            Book book = new Book();
-            for (int i = 0; i < p.getLibrary().getBooks().size(); i++) {
-                if (p.getLibrary().getBooks().get(i).getId() == sel) {
-                    book = p.getLibrary().getBooks().get(i);}}
-            if (book.getActiveOrdersId().size()==0){
-                if (p.confirm("из каталога будет удалена "+book.toString()
-                + " в кол-ве : " + book.getQuantity() + " экз.")){
-                    p.getLibrary().getBooks().remove(book);
-                    message = "из каталога удалена "+book.toString() + " в кол-ве : "
-                            + book.getQuantity() + " экз.\n";
-                    p.getLibrary().setChangesLog(p.getLibrary().getChangesLog() + message);
-                    if(sel==p.getLibrary().getBooksMaxId()){p.getLibrary().updateMaxIdBook();}}
-                else {message = "Удаление отменено.";}}
-            else {
-                message = "Невзможно удалить из каталога книгу ( назв.: "+book.getName()+" авт.: "+book.getAuthor()+" )\n"+
-                "  пока есть экземпляры на руках у читателей :\n";
-                for (int item:book.getActiveOrdersId()) {
-                    message = message + "Выдача(ID : "+item+" ) "
-                            +p.getLibrary().getListenerFromOrder(
-                                    p.getLibrary().getActiveOrderFromId(item)).toString()+"\n";}
-                message = message+"Сначала необходимо все вернуть...\n";
-            }
-
-
-        }
-        return message;}
+        return RemoveBook.removeBook(p,sel);}
 
     public String removeListener(int sel) {
-        String message = wrongIdmessage(sel,1);
-        if (p.getLibrary().checkIdListener(sel)){
-        Listener listener = new Listener();
-        for (int i = 0; i < p.getLibrary().getListeners().size(); i++) {
-            if (p.getLibrary().getListeners().get(i).getId() == sel) {
-                listener = p.getLibrary().getListeners().get(i);}}
-        if (listener.getActiveOrdersId().size()==0){
-            if (p.confirm("из реестра будет удален " + listener.toString())){
-                p.getLibrary().getListeners().remove(listener);
-                message = "из реестра удален " + listener.toString()+"\n";
-                p.getLibrary().setChangesLog(p.getLibrary().getChangesLog() + message);
-                if(sel==p.getLibrary().getListenerMaxId()){p.getLibrary().updateMaxIdListener();}}
-            else {message = "Удаление отменено.";}}
-        else{
-            message = "Невзможно удалить из реестра читателя ( имя : "+listener.getFirstName()+" фамилия : "
-                    +listener.getLastName()+" )\n"+
-                    "  пока у него на руках у есть книги :\n";
-            for (int item:listener.getActiveOrdersId()) {
-                message = message + "Выдача(ID : "+item+" ) "
-                        +p.getLibrary().getBookFromOrder(
-                        p.getLibrary().getActiveOrderFromId(item)).toString()+"\n";}
-            message = message+"Сначала необходимо все вернуть...\n";
-        }
-        }
-
-    return  message;}
+        return RemoveBook.removeBook(p,sel);}
 
     public String addListener(ArrayList<String> list) {
-        String message = "";
-        boolean gender = false;
-        boolean flag = false;
-        int id = Integer.valueOf(list.get(0));
-        String firstName = list.get(1);
-        String lastName = list.get(2);
-        if (list.get(3).equals("1")) {gender = true;}
-        String homeAdres = list.get(4);
-        String phone = list.get(5);
-        Listener listener = new Listener(id, firstName, lastName, gender, homeAdres, phone);
-        for (Listener item:p.getLibrary().getListeners()){
-            if (item.equals(listener)){
-                message = "Такой читатель уже есть в реестре данной библиотеки с ID : "
-                        +item.getId()+"\nДобавление прервано."; flag = true;}}
-        if (!flag){
-            p.getLibrary().setListenerMaxId(p.getLibrary().getListenerMaxId() + 1);
-            p.getLibrary().getListeners().add(listener);
-            message = "в реестр добавлен " + listener.toString() + "\n";
-            p.getLibrary().setChangesLog(p.getLibrary().getChangesLog() + message);}
-        return message;}
+        return AddListener.addListener(p,list);}
 
     public String giveBook(ArrayList<String> giveBook) {
-        String message = "Проблемы при создании заказа : \n";
-        boolean flag = true;
-        Order order = new Order();
-        order.setId(Integer.valueOf(giveBook.get(0)));
-        order.setBookId(Integer.valueOf(giveBook.get(1)));
-        if (!p.getLibrary().checkIdBook(order.getBookId())) {
-            flag = false;
-            message = message + wrongIdmessage(order.getBookId(),0);}
-        order.setListenerId(Integer.valueOf(giveBook.get(2)));
-        if (!p.getLibrary().checkIdListener(order.getListenerId())) {
-            flag = false;
-            message = message + wrongIdmessage(order.getListenerId(),1);}
-        order.setOpenComment(giveBook.get(3));
-        if (p.getLibrary().getBookFromId(order.getBookId()).getExist() == 0) {
-            flag = false;
-            message = message + "Книга " + p.getLibrary().getBookFromId(order.getBookId()).getName() +
-                    " закончилась.\nПридется подождать возвратов других читателей.\n";}
-        for (int i = 0; i < p.getLibrary().getListenerFromOrder(order).getActiveOrdersId().size(); i++) {
-            int tempIdOrder = p.getLibrary().getListenerFromOrder(order).getActiveOrdersId().get(i);
-            int tempIdBook = p.getLibrary().getActiveOrderFromId(tempIdOrder).getBookId();
-            if (tempIdBook==order.getBookId()){
-                flag = false;
-                message = message + "\nКнига " + p.getLibrary().getBookFromOrder(order).getName() +
-                        " уже на руках у данного читателя (" +
-                        p.getLibrary().getListenerFromOrder(order).getFirstName() + " " +
-                        p.getLibrary().getListenerFromOrder(order).getLastName() + ").";}}
-        if (flag) {
-            p.getLibrary().getActiveOrders().add(order);
-            p.getLibrary().setOrdersMaxId(order.getId());
-            p.getLibrary().getBookFromId(order.getBookId()).getActiveOrdersId().add(order.getId());
-            p.getLibrary().getBookFromId(order.getBookId()).setExist(p.getLibrary().getBookFromId(order.getBookId()).getExist()-1);
-            p.getLibrary().getListenerFromId(order.getListenerId()).getActiveOrdersId().add(order.getId());
-            message = "Книга ("+p.getLibrary().getBookFromId(order.getBookId()).getName()
-                    +") выдана читателю ("+p.getLibrary().getListenerFromId(order.getListenerId()).getFirstName() +
-                    " "+p.getLibrary().getListenerFromId(order.getListenerId()).getLastName()+").\n";
-            p.getLibrary().setChangesLog(p.getLibrary().getChangesLog()+message);}
-        else {message = message+"\nЗаказ не оформлен. Книга не выдана.";}
-        return message; }
+        return GiveBook.giveBook(p,giveBook);}
 
     public String returnBook(String[] returnBook) {
-        int sel = Integer.valueOf(returnBook[0]);
-        String message = "";
-        if (p.getLibrary().checkIdActiveOrders(sel)){
-            Order order = p.getLibrary().getActiveOrderFromId(sel);
-            order.setCloseComment(returnBook[1]);
-            Listener listener = p.getLibrary().getListenerFromOrder(p.getLibrary().getActiveOrderFromId(sel));
-            Book book = p.getLibrary().getBookFromOrder(p.getLibrary().getActiveOrderFromId(sel));
-            p.getLibrary().getListenerFromOrder(p.getLibrary().getActiveOrderFromId(sel)).getActiveOrdersId().remove(listener.getIndFromIdOrder(sel));
-            p.getLibrary().getBookFromOrder(p.getLibrary().getActiveOrderFromId(sel)).getActiveOrdersId().remove(book.getIndFromIdOrder(sel));
-            p.getLibrary().getBookFromOrder(p.getLibrary().getActiveOrderFromId(sel)).setExist(book.getExist()+1);
-            p.getLibrary().getActiveOrders().remove(p.getLibrary().getActiveOrderFromId(sel));
-            p.getLibrary().getClosedOrders().add(order);
-            message = "Возврат книги "+book.getName()+" "+book.getAuthor()+" читателем "
-                    +listener.getFirstName()+" "+listener.getLastName()+" осуществлен.\n";
-            p.getLibrary().setChangesLog(p.getLibrary().getChangesLog()+message);}
-        else {message = wrongIdmessage(sel,2);}
-        return message;}
+        return ReturnBook.returnBook(p,returnBook);}
 
     public String getList() {
         String message = "\nСПИСОК АКТИВНЫХ ЗАКАЗОВ : \n";
@@ -266,65 +95,14 @@ public class Models {
         return message;}
 
     public String getInfoBook(int sel) {
-        String message = wrongIdmessage(sel,0);
-        if (p.getLibrary().checkIdBook(sel)){
-            Book book = p.getLibrary().getBookFromId(sel);
-            message = "ИНФОРМАЦИЯ О КНИГЕ (ID : "+sel+") :\n";
-            message = message+"\n"+book.toString()+"\nКол-во страниц : "+book.getPages()+
-                    "Кол-во экземпляров в библиотеке : "+book.getQuantity()+" Кол-во в наличии : "+book.getExist()+
-                    "\nВ настоящее время выдана : \n";
-            for (int item:book.getActiveOrdersId()){
-                Listener listener = p.getLibrary().getListenerFromOrder(p.getLibrary().getActiveOrderFromId(item));
-                message = message+"\n"+listener.toString()
-                        +" Заказ(ID : "+item+") :\nкомментарий при выдаче : "
-                        +p.getLibrary().getActiveOrderFromId(item).getOpenComment()+"\n";}
-            message = message + "\nРанее выдавалась : \n";
-            for (Order item:p.getLibrary().getClosedOrders()){
-                if (item.getBookId()==sel){
-                    Listener listener = p.getLibrary().getListenerFromOrder(item);
-                    message = message+"\n"+listener.toString()
-                            +"\nЗаказ(ID : "+item.getId()+"), комментарий при выдаче : "
-                            +item.getOpenComment()+"\nкомментарий при возврате : "
-                            +item.getCloseComment()+"\n";
-                }
-            }
-        }
-        return message;}
+        return GetInfoBook.getInfoBook(p,sel);}
+
     public String getInfoListener(int sel){
-        String message = wrongIdmessage(sel,1);
-        if (p.getLibrary().checkIdListener(sel)){
-            Listener listener = p.getLibrary().getListenerFromId(sel);
-            message = "ИНФОРМАЦИЯ О ЧИТАТЕЛЕ (ID : "+sel+") :\n";
-            message = message+listener.toString()+"\nДом адр.: "+listener.getHomeAdress()
-                    +"\nВ настоящее время на руках : \n";
-            for (int item:listener.getActiveOrdersId()){
-                Book book = p.getLibrary().getBookFromOrder(p.getLibrary().getActiveOrderFromId(item));
-                message = message+book.toString()+"\nКомментарий при выдаче :\n"
-                        +p.getLibrary().getActiveOrderFromId(item).getOpenComment()+"\n";}
-            message = message + "\nРанее брал : \n";
-            for (Order item:p.getLibrary().getClosedOrders()){
-                if (item.getListenerId()==sel){
-                    Book book = p.getLibrary().getBookFromOrder(item);
-                    message = message+"Книга ("+book.getName()+") Автор : "+book.getAuthor()+" Заказ(ID : "
-                    +item.getId()+")\nКомментарий при выдаче : "+item.getOpenComment()
-                    +"\nКомментарий при возврате : "+item.getCloseComment()+"\n";}
-            }
-        }
-        return  message;}
+        return GetInfoListener.getInfoListener(p,sel);}
+
     public String getInfoOrder(int sel){
-        String message = wrongIdmessage(sel,2);
-        boolean flag = false;
-        Order order = new Order();
-        if (p.getLibrary().checkIdActiveOrders(sel)){
-            order = p.getLibrary().getActiveOrderFromId(sel);
-            flag = true;}
-        else if (p.getLibrary().checkIdClosedOrders(sel)) {
-            order = p.getLibrary().getClosedOrdersFromId(sel);
-            flag = true;}
-        if (flag){
-            message = order.mytString(p.getLibrary());}
-        return message;
-    }
+       return GetInfoOrder.getInfoOrder(p,sel);}
+
     public void close(){
         if (p.getLibrary().getChangesLog().length()>0){
             if (p.confirm("Были внесены изменения :\n"+p.getLibrary().getChangesLog()+"\nСохранить")){
@@ -338,128 +116,19 @@ public class Models {
             p.startLibraryMenu(p.getLibrary().getName());}
         else {p.printMessage(wrongIdmessage(sel,3));}
         p.pressButton();}
+
     public void updateMaxIdLibrarys(){
         int max = 0;
         for (NoteLibrary item:p.getListLibrary().getNotes()) {
             if (max<item.getId()) {max = item.getId();}}
-        p.getListLibrary().setMaxID(max);
-    }
+        p.getListLibrary().setMaxID(max);}
 
     public String removeOneBook(int sel) {
-        String message = wrongIdmessage(sel,0);
+        return RemoveOneBook.removeOneBook(p,sel);}
 
-        if (p.getLibrary().checkIdBook(sel)){
-            Book book = new Book();
-            for (int i = 0; i < p.getLibrary().getBooks().size(); i++) {
-                if (p.getLibrary().getBooks().get(i).getId() == sel) {
-                    book = p.getLibrary().getBooks().get(i);}}
-            if (book.getExist()>0){
-                if (p.confirm("Будет утилизирован 1 экземпляр "+book.toString())){
-                    if (book.getQuantity()>1){
-                        p.getLibrary().getBookFromId(sel).setExist(book.getExist()-1);
-                        p.getLibrary().getBookFromId(sel).setQuantity(book.getQuantity()-1);
-                        message = "Утилизирован 1 экземпляр "+book.toString()+ ".\n";
-                        p.getLibrary().setChangesLog(p.getLibrary().getChangesLog() + message);}
-                    else{
-                        if (p.confirm("Это единственный экземпляр в библиотеке. \n" +
-                                "  "+book.toString()+" будет удалена из каталога целиком")){
-                            if(p.getLibrary().getBooks().remove(book)) {
-                                message = "Удален единственный экземпляр и из каталога целиком удалена :\n"
-                                +book.toString();
-                                p.getLibrary().setChangesLog(p.getLibrary().getChangesLog() + message);
-                                if(sel==p.getLibrary().getBooksMaxId()){p.getLibrary().updateMaxIdBook();}}
-                            else {message = "Удаление почему-то не прошло...";}}
-                        else{message = "Удаление отменено.";}}}
-                else {message = "Удаление отменено.";}}
-            else {
-                message = "В наличии нет экз.( "+book.getName()+" "+book.getAuthor()+" ),\n" +
-                    "  доступных для удаления. Все экземпляры на руках у читателей :\n";
-                for (int item:book.getActiveOrdersId()) {
-                    message = message + "Выдача(ID : "+item+" ) "
-                            +p.getLibrary().getListenerFromOrder(
-                            p.getLibrary().getActiveOrderFromId(item)).toString()+"\n";}
-                message = message+"Сначала необходимо что-нибудь вернуть...\n";}}
+    public String editBook(int sel) {
+        return EditBook.editBook(p,sel);}
 
-        return message;}
-
-
-    public String getBookInStrList(int sel) {
-        String message = wrongIdmessage(sel,0);
-        if (p.getLibrary().checkIdBook(sel)){
-            Book book = p.getLibrary().getBookFromId(sel);
-            message = "Отредактирована "+book.toString()+" :\n";
-            boolean test  =false;
-            p.printMessage("Редактируется книга с ID : "+book.getId()+
-            "\n  Название       : "+book.getName()+
-            "\n  Автор          : "+book.getAuthor()+
-            "\n  Издательство   : "+book.getManufacture()+
-            "\n  Кол-во страниц : "+book.getPages()+
-            "\nВведите новые параметры (ENTER - оставить прежнее значение): ");
-            ArrayList<String> list = p.startBookEditForm();
-            if (list.get(0)!=""&&!list.get(0).equals(book.getName())){
-                test = true;
-                message = message+"  изменено имя : "+book.getName()+" --> "+list.get(0)+"\n";
-                p.getLibrary().getBookFromId(sel).setName(list.get(0));}
-            if (list.get(1)!=""&&!list.get(1).equals(book.getAuthor())){
-                test = true;
-                message = message+"  изменен автор : "+book.getAuthor()+" --> "+list.get(1)+"\n";
-                p.getLibrary().getBookFromId(sel).setAuthor(list.get(1));}
-            if (list.get(2)!=""&&!list.get(2).equals(book.getManufacture())){
-                test = true;
-                message = message+"  изменено издательство : "+book.getManufacture()+" --> "+list.get(2)+"\n";
-                p.getLibrary().getBookFromId(sel).setManufacture(list.get(2));}
-            if (!list.get(3).equals("0")&&!list.get(3).equals(String.valueOf(book.getPages()))){
-                test = true;
-                message = message+"  изменено кол-во страниц : "+book.getPages()+" --> "+list.get(3)+"\n";
-                p.getLibrary().getBookFromId(sel).setPages(Integer.valueOf(list.get(3)));}
-            if (test){p.getLibrary().setChangesLog(p.getLibrary().getChangesLog() + message);}
-            else {message = book.toString()+" не изменена.";}
-        }
-        return message;}
-    public String getListenerInStrList(int sel){
-        String message = wrongIdmessage(sel,1);
-        if (p.getLibrary().checkIdListener(sel)){
-            Listener listener = p.getLibrary().getListenerFromId(sel);
-            String strOldGend = "Женский";
-            String strNewGend = "Женский";
-            boolean gender = false;
-            boolean newGender = false;
-            if (listener.isGender()){strOldGend = "Мужской";gender = true;}
-            message = "Отредактирован "+listener.toString()+" :\n";
-            boolean test  =false;
-            p.printMessage("Редактируется читатель с ID : "+listener.getId()+
-                    "\n  Фамилия        : "+listener.getLastName()+
-                    "\n  Имя            : "+listener.getFirstName()+
-                    "\n  Пол            : "+strOldGend+
-                    "\n  Домашний адрес : "+listener.getHomeAdress()+
-                    "\n  Телефон        : "+listener.getPhone()+
-                    "\nВведите новые параметры (ENTER - оставить прежнее значение): ");
-            ArrayList<String> list = p.startListenerEditForm();
-            if (list.get(2).equals("1")){strNewGend = "Мужской";newGender = true;}
-            if (list.get(0)!=""&&!list.get(0).equals(listener.getLastName())){
-                test = true;
-                message = message+"  изменена фамилия : "+listener.getLastName()+" --> "+list.get(0)+"\n";
-                p.getLibrary().getListenerFromId(sel).setLastName(list.get(0));}
-            if (list.get(1)!=""&&!list.get(1).equals(listener.getFirstName())){
-                test = true;
-                message = message+"  изменено имя : "+listener.getFirstName()+" --> "+list.get(1)+"\n";
-                p.getLibrary().getListenerFromId(sel).setFirstName(list.get(1));}
-            if (!list.get(2).equals("0")&&!strNewGend.equals(strOldGend)){
-                test = true;
-                message = message+"  изменен пол : "+strOldGend+" --> "+strNewGend+"\n";
-                p.getLibrary().getListenerFromId(sel).setGender(newGender);}
-            if (list.get(3)!=""&&!list.get(3).equals(listener.getHomeAdress())){
-                test = true;
-                message = message+"  изменен домашний адрес : "+listener.getHomeAdress()+" --> "+list.get(3)+"\n";
-                p.getLibrary().getListenerFromId(sel).setHomeAdress(list.get(3));}
-            if (list.get(4)!=""&&!list.get(4).equals(listener.getPhone())){
-                test = true;
-                message = message+"  изменен телефон : "+listener.getPhone()+" --> "+list.get(4)+"\n";
-                p.getLibrary().getListenerFromId(sel).setPhone(list.get(4));}
-
-            if (test){p.getLibrary().setChangesLog(p.getLibrary().getChangesLog() + message);}
-            else {message = listener.toString()+" не изменен.";}
-        }
-        return message;
-    }
+    public String editListener(int sel){
+        return EditListener.editListener(p,sel);}
 }
