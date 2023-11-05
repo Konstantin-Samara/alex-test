@@ -61,23 +61,14 @@ public class Library implements Serializable {
     public  boolean checkIdClosedOrders(int sel) {
         for (Order item:closedOrders) {if (item.getId()==sel){return true;}}
         return false;}
-//    public void updateMinIdBook(){
-//        int min = 0;
-//        for (Book item:books)
-//            {if (min>item.getId()) {min = item.getId();}}
-//        bookMinId = min;}
+
     public void updateMaxIdBook(){
         int max = 0;
         for (Book item:books)
             {if (max<item.getId()) {max = item.getId();}}
         booksMaxId = max;
     }
-//    public void updateMinIdListener(){
-//        int min = 0;
-//        for (Listener item:listeners)
-//            {if (min>item.getId()) {min = item.getId();}}
-//        listenerMinId = min;
-//    }
+
     public void updateMaxIdListener(){
         int max = 0;
         for (Listener item:listeners)
@@ -171,21 +162,7 @@ public class Library implements Serializable {
         this.closedOrders = closedOrders;
     }
 
-//    public int getBookMinId() {
-//        return bookMinId;
-//    }
-//
-//    public void setBookMinId(int bookMinId) {
-//        this.bookMinId = bookMinId;
-//    }
-//
-//    public int getListenerMinId() {
-//        return listenerMinId;
-//    }
-//
-//    public void setListenerMinId(int listenerMinId) {
-//        this.listenerMinId = listenerMinId;
-//    }
+
 
 }
 

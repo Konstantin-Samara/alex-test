@@ -61,4 +61,8 @@ public class Order implements Serializable {
         if (closeComment!=""){str = str+"Комментарий при возврате : "+closeComment+"\n";}
         return str;
     }
+
+    public boolean equals(Order o) {
+        return this.getListenerId()==o.getListenerId()&&this.getBookId()==o.getBookId();
+    }
 }

@@ -27,10 +27,13 @@ public class HandCreate {
         books.add(new Book(4,"О Ломоносове","друг Ломоносова","Москва 1983",850,1));
         books.add(new Book(5,"О Стихи и оды","сам Ломоносов","Москва 1984",750,2));
         books.add(new Book(6,"О Архангельске","сосед Ломоносова","Москва 1985",650,3));
+
         books.add(new Book(1,"О Любви","сам Пушкин","СПБ 1992",770,2));
         books.add(new Book(2,"О Погоде","Александр Пушкин","СПБ 1993",670,1));
-        books.add(new Book(3,"О Пушкине","Дантес","СПБ 1994",570,4));
-        books.add(new Book(4,"О Болдино","сам Пушкин","Сочи 2018",1290,3));
+        books.add(new Book(3,"О Стихи и оды","сам Ломоносов","Москва 1984",750,4));
+        books.add(new Book(4,"О России","сам Ломоносов","Архангельск 1980",800,5));
+
+//        books.add(new Book(4,"О Болдино","сам Пушкин","Сочи 2018",1290,3));
         books.add(new Book(5,"Про осень","сам Пушкин","Сочи 2019",1090,2));
         books.add(new Book(6,"Про зиму","сам Пушкин","Сочи 2020",1190,1));
         return books;
@@ -42,9 +45,12 @@ public class HandCreate {
         listeners.add(new Listener(3,"Николай","Николаев",true,"Новосибирск","+79272454545"));
         listeners.add(new Listener(4,"Дмитрий","Дмитриев",true,"Москва","+79121231231"));
         listeners.add(new Listener(5,"Сергей","Сергеев",true,"Питер","+79127654321"));
-        listeners.add(new Listener(6,"Владимир","Владимиров",true,"Самара","+79125656565"));
+        listeners.add(new Listener(6,"Елена","Еленина",true,"Питер","+79127777777"));
+
+
         listeners.add(new Listener(1,"Татьяна","Ларина",false,"Питер","+70951231231"));
-        listeners.add(new Listener(2,"Ольга","Морозова",false,"Питер","+70957654321"));
+        listeners.add(new Listener(2,"Иван","Иванов",true,"Екатеринбург","+79272876543"));
+        //        listeners.add(new Listener(2,"Ольга","Морозова",false,"Питер","+70957654321"));
         listeners.add(new Listener(3,"Наталья","Романова",false,"Питер","+70955656565"));
         listeners.add(new Listener(4,"Елена","Еленина",true,"Питер","+79127777777"));
         listeners.add(new Listener(5,"Анна","Нюрина",true,"Питер","+79126666666"));
@@ -61,9 +67,7 @@ public class HandCreate {
             librarys[i] = new Library(listLibrary.getNotes().get(i).getId(),
             listLibrary.getNotes().get(i).getName());
             librarys[i].setBooksMaxId(6);
-//            librarys[i].setBookMinId(1);
             librarys[i].setListenerMaxId(6);
-//            librarys[i].setListenerMinId(1);
             librarys[i].setOrdersMaxId(0);
 
             for (int j = 0; j < 6; j++) {

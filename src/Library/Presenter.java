@@ -53,7 +53,8 @@ private Library library;
     public String removeLibrary(int sel)
         {return m.removeLibrary(sel);}
 
-    public void mergeLibrary() {System.out.println("mergeLibrary pressed");}
+    public String mergeLibrary(int sel, int sel1)
+        {return m.mergeLibrary(sel,sel1);}
 
     public void addLibrary(String s)
         {m.addLibrary(s);}

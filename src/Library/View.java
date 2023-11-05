@@ -93,7 +93,13 @@ public class View {
         ViewModels.printMessage(presenter.removeLibrary(sel));
         presenter.pressButton();}
 
-    public void mergeLibrary() {presenter.mergeLibrary();}
+    public void mergeLibrary() {
+        int minLibraryId = presenter.getListLibrary().getNotes().get(0).getId();
+        int maxLibraryId = presenter.getListLibrary().getMaxID();
+        int sel = Inputs.my_input(true,"Введите ID базовой библиотеки для слияния : ",minLibraryId,maxLibraryId);
+        int sel1 = Inputs.my_input(true,"Введите ID присоединяемой библиотеки : ",minLibraryId,maxLibraryId);
+        ViewModels.printMessage(presenter.mergeLibrary(sel,sel1));
+        presenter.pressButton();}
 
     public void addLibrary() {
         String s = ViewModels.addLibrary(presenter.getListLibrary().getMaxID());

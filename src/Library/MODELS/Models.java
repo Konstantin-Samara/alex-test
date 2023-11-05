@@ -131,4 +131,8 @@ public class Models {
 
     public String editListener(int sel){
         return EditListener.editListener(p,sel);}
+
+    public String mergeLibrary(int sel, int sel1) {
+        return MergeLibrary.mergeLibrary(p,sel,sel1);}
+
 }
