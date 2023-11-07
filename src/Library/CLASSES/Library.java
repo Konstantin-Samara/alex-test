@@ -66,15 +66,22 @@ public class Library implements Serializable {
         int max = 0;
         for (Book item:books)
             {if (max<item.getId()) {max = item.getId();}}
-        booksMaxId = max;
-    }
+        booksMaxId = max;}
 
     public void updateMaxIdListener(){
         int max = 0;
         for (Listener item:listeners)
             {if (max<item.getId()) {max = item.getId();}}
-        listenerMaxId = max;
-    }
+        listenerMaxId = max;}
+
+    public void updateMaxIdOrder(){
+        int max = 0;
+        for (Order item:activeOrders)
+            {if(max<item.getId()){max = item.getId();}}
+        for (Order item:closedOrders)
+        {if(max<item.getId()){max = item.getId();}}
+        ordersMaxId = max;}
+
     public int getId() {
         return id;
     }

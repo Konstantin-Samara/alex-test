@@ -3,6 +3,7 @@ package Library.MODELS.LIBRARY_MODELS;
 import Library.CLASSES.Library;
 import Library.CLASSES.Order;
 import Library.MODELS.Models;
+import Library.MODELS.WriteRead;
 import Library.Presenter;
 
 import java.util.ArrayList;
@@ -32,28 +33,32 @@ public class MergeLibrary {
 
             int count = library.getBooksMaxId();
             for (int i = 0; i < library1.getBooks().size(); i++) {
-                int[] temp = new int[2];
+                int[] temp = new int[3];
                 exist = false;
                 temp[0] = library1.getBooks().get(i).getId();
                 for (int j = 0; j < library.getBooks().size(); j++){
                     if (library1.getBooks().get(i).equals(library.getBooks().get(j))){
                         exist = true;
+                        temp[2] = 1;
                         temp[1] = library.getBooks().get(j).getId();}}
-                if (!exist)
-                    {temp[1] = ++count;}
+                if (!exist){
+                    temp[1] = ++count;
+                    temp[2] = 0;}
                 listIdBooks.add(temp);}
 
             count = library.getListenerMaxId();
             for (int i = 0; i < library1.getListeners().size(); i++) {
-                int[] temp1 = new int[2];
+                int[] temp1 = new int[3];
                 exist = false;
                 temp1[0] = library1.getListeners().get(i).getId();
                 for (int j = 0; j < library.getListeners().size(); j++) {
                     if(library1.getListeners().get(i).equals(library.getListeners().get(j))){
                         exist = true;
+                        temp1[2] = 1;
                         temp1[1] = library.getListeners().get(j).getId();}}
-                if (!exist)
-                    {temp1[1] = ++count;}
+                if (!exist){
+                    temp1[2] = 0;
+                    temp1[1] = ++count;}
                 listIdListeners.add(temp1);}
 
             count = library1.getOrdersMaxId();
@@ -72,17 +77,7 @@ public class MergeLibrary {
                 tempOrder.setId(temp2[0]);
                 tempOrder.setBookId(getNewIdFromOld(listIdBooks,library1.getActiveOrders().get(i).getBookId()));
                 tempOrder.setListenerId(getNewIdFromOld(listIdListeners,library1.getActiveOrders().get(i).getListenerId()));
-                tempOrders.add(tempOrder);
-            }
-
-            /*проверка*/
-            System.out.println("ИД книг в присоединяемой бибблиотеке : ");
-            for (int j = 0; j < listIdBooks.size(); j++) {
-                System.out.println(listIdBooks.get(j)[0]+"-->"+listIdBooks.get(j)[1]);}
-            System.out.println("ИД читателей в присоединяемой бибблиотеке : ");
-            for (int j = 0; j < listIdListeners.size(); j++) {
-                System.out.println(listIdListeners.get(j)[0]+"-->"+listIdListeners.get(j)[1]);}
-            /*проверка*/
+                tempOrders.add(tempOrder);}
 
             exist = false;
             for (Order ordLyb1:tempOrders) {
@@ -108,9 +103,55 @@ public class MergeLibrary {
                             +"Чтобы объединить эти библиотеки, данный читатель должен вернуть хотя-бы\n"
                             +"один экзкмпляр в любую из них...\n";}
                 message = message+"\nОБЪЕДИНЕНИЕ БИБЛИОТЕК НЕ ПРОИЗОШЛО!\n";}
+
             else {
-                /*do merge*/
-            }
+                for (int[] item:listIdBooks) {
+                    ArrayList<Integer> newId = new ArrayList<>();
+                    for (int i = 0; i < library1.getBookFromId(item[0]).getActiveOrdersId().size(); i++) {
+                        newId.add(getNewIdFromOld(listIdActiveOrders,
+                                library1.getBookFromId(item[0]).getActiveOrdersId().get(i)));}
+                    library1.getBookFromId(item[0]).setActiveOrdersId(newId);
+                    library1.getBookFromId(item[0]).setId(item[1]);
+                    if (item[2]==1){
+                        for (int item1:library1.getBookFromId(item[1]).getActiveOrdersId()) {
+                            library.getBookFromId(item[1]).getActiveOrdersId().add(item1);}
+                        library.getBookFromId(item[1]).setQuantity(
+                                library.getBookFromId(item[1]).getQuantity()
+                                        +library1.getBookFromId(item[1]).getQuantity());
+                        library.getBookFromId(item[1]).setExist(
+                                library.getBookFromId(item[1]).getExist()
+                                    +library1.getBookFromId(item[1]).getExist());}
+                    else {library.getBooks().add(library1.getBookFromId(item[1]));}}
+                library.updateMaxIdBook();
+                for (int[] item:listIdListeners) {
+                    ArrayList<Integer> newId = new ArrayList<>();
+                    for (int i = 0; i < library1.getListenerFromId(item[0]).getActiveOrdersId().size(); i++) {
+                        newId.add(getNewIdFromOld(listIdActiveOrders,
+                                library1.getListenerFromId(item[0]).getActiveOrdersId().get(i)));}
+                    library1.getListenerFromId(item[0]).setActiveOrdersId(newId);
+                    library1.getListenerFromId(item[0]).setId(item[1]);
+                    if (item[2]==1){
+                        for (int item1:library1.getListenerFromId(item[1]).getActiveOrdersId()) {
+                            library.getListenerFromId(item[1]).getActiveOrdersId().add(item1);}
+                    }
+                    else {library.getListeners().add(library1.getListenerFromId(item[1]));}}
+                library.updateMaxIdListener();
+                for (int[] item:listIdClosedOrders) {
+                    library1.getClosedOrdersFromId(item[0]).setListenerId(getNewIdFromOld(
+                            listIdListeners,library1.getClosedOrdersFromId(item[0]).getListenerId()));
+                    library1.getClosedOrdersFromId(item[0]).setBookId(getNewIdFromOld(
+                            listIdBooks,library1.getClosedOrdersFromId(item[0]).getBookId()));
+                    library1.getClosedOrdersFromId(item[0]).setId(item[1]);
+                    library.getClosedOrders().add(library1.getClosedOrdersFromId(item[1]));}
+                for (int[] item:listIdActiveOrders) {
+                    library1.getActiveOrderFromId(item[0]).setListenerId(getNewIdFromOld(
+                            listIdListeners,library1.getActiveOrderFromId(item[0]).getListenerId()));
+                    library1.getActiveOrderFromId(item[0]).setBookId(getNewIdFromOld(
+                            listIdBooks,library1.getActiveOrderFromId(item[0]).getBookId()));
+                    library1.getActiveOrderFromId(item[0]).setId(item[1]);
+                    library.getActiveOrders().add(library1.getActiveOrderFromId(item[1]));}
+                library.updateMaxIdOrder();
+                WriteRead.save(library,library.getFileName());}
         }
         return message;}
 
