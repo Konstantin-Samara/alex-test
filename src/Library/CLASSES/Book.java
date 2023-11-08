@@ -21,11 +21,12 @@ public class Book implements Serializable {
         this.setManufacture(manufacture);
         this.setPages(pages);
         this.setQuantity(quantity);
-        this.setExist(quantity);
-    }
+        this.setExist(quantity);}
+
     @Override
     public String toString(){
-        return "книга(ID : "+getId() +" ). назв.\""+ getName() +"\""+" авт."+ getAuthor() +" изд."+ getManufacture();}
+        return "книга(ID : "+getId() +" ). назв.\""+ getName() +"\""+" авт."+ getAuthor()
+                +" изд."+ getManufacture()+" "+activeOrdersId.toString();}
 
     public boolean equals(Book b1) {
         return getName().equals(b1.getName())&& getAuthor().equals(b1.getAuthor())

@@ -50,8 +50,8 @@ private Library library;
         {m.selectLibrary(sel);}
     public void startLibraryMenu(String s)
         {v.getLibraryMenu(s);}
-    public String removeLibrary(int sel)
-        {return m.removeLibrary(sel);}
+    public String removeLibrary(int sel,boolean needCheckConfirm)
+        {return m.removeLibrary(sel,needCheckConfirm);}
 
     public String mergeLibrary(int sel, int sel1)
         {return m.mergeLibrary(sel,sel1);}

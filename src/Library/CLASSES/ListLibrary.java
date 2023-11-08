@@ -38,5 +38,4 @@ public class ListLibrary implements Serializable {
             Library library = (Library) WriteRead.read("./src/Library/DATA/library"+sel+".out");
         return library;}
 
-
 }

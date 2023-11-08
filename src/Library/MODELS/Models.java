@@ -38,23 +38,24 @@ public class Models {
             str = str + p.getListLibrary().getNotes().get(i).toString() + "\n";}
         return str;}
 
-    public String removeLibrary(int sel) {
+    public String removeLibrary(int sel, boolean needCheckConfirm) {
         String message = "";
-        if (p.getListLibrary().checkId(sel)){
-            if(p.confirm(p.getListLibrary().getLibraryFromId(sel).getName()+" будет удалена"))
-                {for (int i = 0; i < p.getListLibrary().getNotes().size(); i++) {
-                    if (p.getListLibrary().getNotes().get(i).getId() == sel) {
-                        File file = new File(p.getListLibrary().getNotes().get(i).getFileName());
-                        if (file.delete()) {message =
-                                p.getListLibrary().getNotes().get(i).getName()+"\" успешно удалена.";}
-                        p.getListLibrary().getNotes().remove(p.getListLibrary().getNotes().get(i));
-                        if(sel == p.getListLibrary().getMaxID()){updateMaxIdLibrarys();}
-                        WriteRead.save(p.getListLibrary(), "./src/Library/DATA/listlibrary.out");}
-                }
-            }
-            else {message = "Удаление отменено.";}
-        }
-        else {message = wrongIdmessage(sel,3);}
+        if (needCheckConfirm){
+            if (p.getListLibrary().checkId(sel)){
+                if(p.confirm(p.getListLibrary().getLibraryFromId(sel).getName()+" будет удалена")){
+                    needCheckConfirm = false;
+                } else {message = "Удаление отменено.";}
+            } else {message = wrongIdmessage(sel,3);}}
+
+        if (!needCheckConfirm){
+            for (int i = 0; i < p.getListLibrary().getNotes().size(); i++) {
+                if (p.getListLibrary().getNotes().get(i).getId() == sel) {
+                    File file = new File(p.getListLibrary().getNotes().get(i).getFileName());
+                    if (file.delete()) {message =
+                            p.getListLibrary().getNotes().get(i).getName()+"\" успешно удалена.";}
+                    p.getListLibrary().getNotes().remove(p.getListLibrary().getNotes().get(i));
+                    if(sel == p.getListLibrary().getMaxID()){updateMaxIdLibrarys();}
+                    WriteRead.save(p.getListLibrary(), "./src/Library/DATA/listlibrary.out");}}}
     return message;}
 
     public void addLibrary(String s) {

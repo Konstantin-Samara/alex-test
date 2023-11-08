@@ -90,7 +90,7 @@ public class View {
         int minLibraryId = presenter.getListLibrary().getNotes().get(0).getId();
         int maxLibraryId = presenter.getListLibrary().getMaxID();
         int sel = Inputs.my_input(true,"Введите ID библиотеки для удаления : ",minLibraryId,maxLibraryId);
-        ViewModels.printMessage(presenter.removeLibrary(sel));
+        ViewModels.printMessage(presenter.removeLibrary(sel,true));
         presenter.pressButton();}
 
     public void mergeLibrary() {

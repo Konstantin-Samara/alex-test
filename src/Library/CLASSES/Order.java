@@ -9,6 +9,12 @@ public class Order implements Serializable {
     private String openComment="";
     private String closeComment="";
     public Order(){}
+    public Order(int id, int listenerId, int bookId, String openComment, String closeComment){
+        this.id = id;
+        this.listenerId = listenerId;
+        this.bookId = bookId;
+        this.openComment = openComment;
+        this.closeComment = closeComment;}
 
 
     public int getId() {

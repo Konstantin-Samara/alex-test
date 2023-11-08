@@ -21,12 +21,13 @@ public class Listener implements Serializable, Comparable<Listener> {
         this.setPhone(phone);
 
     }
+
     @Override
     public String toString(){
         String str = "жен.";
         if (gender) {str = "муж.";}
         return "читатель(ID : "+getId() +" ) фамилия : "+ getLastName() +" имя : "+ getFirstName() +" пол : "+
-                str +" тел : "+ getPhone();}
+                str +" тел : "+ getPhone()+" "+activeOrdersId.toString();}
     public boolean equals(Listener l1){
         return getFirstName().equals(l1.getFirstName())&& getLastName().equals(l1.getLastName())
                 && gender == l1.gender && getHomeAdress().equals(l1.getHomeAdress())&& getPhone().equals(l1.getPhone());
