@@ -7,6 +7,7 @@ import Library.MODELS.LIBRARY_MODELS.*;
 import Library.MODELS.LISTENER_MODELS.AddListener;
 import Library.MODELS.LISTENER_MODELS.EditListener;
 import Library.MODELS.LISTENER_MODELS.GetInfoListener;
+import Library.MODELS.LISTENER_MODELS.RemoveListener;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -79,7 +80,7 @@ public class Models {
         return RemoveBook.removeBook(p,sel);}
 
     public String removeListener(int sel) {
-        return RemoveBook.removeBook(p,sel);}
+        return RemoveListener.removeListener(p,sel);}
 
     public String addListener(ArrayList<String> list) {
         return AddListener.addListener(p,list);}

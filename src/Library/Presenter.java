@@ -6,6 +6,8 @@ import Library.MODELS.HandCreate;
 import Library.MODELS.Models;
 
 import Library.MODELS.WriteRead;
+import Library.VIEW.SWING_VIEW.SwingMainMenu;
+import Library.VIEW.SWING_VIEW.SwingMessage;
 import Library.VIEW.VIEW_MODELS.Inputs;
 
 import java.util.ArrayList;
@@ -18,12 +20,15 @@ private ListLibrary listLibrary;
 private Library library;
 
     public void pressButton() {
-//        setListLibrary((ListLibrary) WriteRead.read("./src/Library/DATA/listlibrary.out"));
         if (Inputs.my_input(true,"Загрузить из файла - 1/сформировать шаблон - 0 : ",0,1)==1) {
             setListLibrary((ListLibrary) WriteRead.read("./src/Library/DATA/listlibrary.out"));}
         else {
             setListLibrary(HandCreate.createLibrarys());}
-        v.getMainMenu(m.getListLibrary());}
+
+//        SwingMessage mainMenu = new SwingMessage("djdjdjdhhdhdhdhdhdhdhdhhdd");
+
+        v.getMainMenu(m.getListLibrary());
+    }
     public void printMessage(String s)
         {v.printMessage(s);}
     public boolean confirm(String s)

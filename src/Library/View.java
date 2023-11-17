@@ -1,5 +1,7 @@
 package Library;
 
+import Library.VIEW.SWING_VIEW.SwingConfirm;
+import Library.VIEW.SWING_VIEW.SwingMessage;
 import Library.VIEW.VIEW_MODELS.Menu;
 import Library.VIEW.VIEW_MODELS.ViewModels;
 import Library.VIEW.VIEW_MODELS.Inputs;
@@ -15,8 +17,13 @@ public class View {
     public boolean confirm(String s){
         boolean flag = false;
             if (Inputs.my_input(true,s+" (Да-1/Нет-0) : ",0,1)==1){flag = true;};
-        return flag;}
-    public void printMessage(String s){ViewModels.printMessage(s);}
+        return
+//                new SwingConfirm(s).start();
+                flag;
+                }
+    public void printMessage(String s){
+        ViewModels.printMessage(s);
+    }
 
     public void getInfoBook(){
         int minId = presenter.getLibrary().getBooks().get(0).getId();

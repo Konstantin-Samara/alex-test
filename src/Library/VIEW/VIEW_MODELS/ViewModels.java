@@ -1,5 +1,6 @@
 package Library.VIEW.VIEW_MODELS;
 
+import Library.VIEW.SWING_VIEW.SwingMessage;
 import Library.View;
 
 import java.util.ArrayList;
@@ -13,7 +14,10 @@ public class ViewModels {
     public static String addLibrary(int maxID)
         {return Inputs.my_input_str(true,"ID : "+(maxID+1)+". Название библиотеки : ");}
 
-    public static void printMessage(String str){System.out.println(str);}
+    public static void printMessage(String str){
+//        new SwingMessage(str);
+        System.out.println(str);
+    }
 
     public static ArrayList<String> addBook(int maxBookId){
         ArrayList<String> book = new ArrayList<>();
