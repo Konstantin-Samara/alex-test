@@ -16,71 +16,138 @@ public class Library implements Serializable {
     private ArrayList<Order> activeOrders = new ArrayList<>();
     private ArrayList<Order> closedOrders = new ArrayList<>();
     private String changesLog;
-    public Library(int i, String n){
+
+    public Library(int i, String n) {
         this.setBooksMaxId(0);
         this.setListenerMaxId(0);
         this.setOrdersMaxId(0);
         this.setChangesLog("");
         this.setId(i);
         this.setName(n);
-        this.setFileName("./src/Library/DATA/library"+ this.getId() +".out");
+        this.setFileName("./src/Library/DATA/library" + this.getId() + ".out");
     }
-    public Library(){}
-    public Listener getListenerFromOrder(Order order)
-        {return getListenerFromId(order.getListenerId());}
-    public Book getBookFromOrder(Order order)
-        {return getBookFromId(order.getBookId());}
-    public Book getBookFromId(int id){
-        Book book = new Book();
-        for (Book item: getBooks()) {if (item.getId() ==id){book = item;}}
-        return book;}
-    public Listener getListenerFromId(int id){
-        Listener listener = new Listener();
-        for (Listener item: getListeners()) {if (item.getId() ==id){listener = item;}}
-        return listener;}
-    public Order getActiveOrderFromId(int id){
-        Order order = new Order();
-        for (Order item: getActiveOrders()) {if (item.getId() ==id){order = item;}}
-        return order;}
 
-    public Order getClosedOrdersFromId(int id){
+    public Library() {
+    }
+
+    public Listener getListenerFromOrder(Order order) {
+        return getListenerFromId(order.getListenerId());
+    }
+
+    public Book getBookFromOrder(Order order) {
+        return getBookFromId(order.getBookId());
+    }
+
+    public Book getBookFromId(int id) {
+        Book book = new Book();
+        for (Book item : getBooks()) {
+            if (item.getId() == id) {
+                book = item;
+            }
+        }
+        return book;
+    }
+
+    public Listener getListenerFromId(int id) {
+        Listener listener = new Listener();
+        for (Listener item : getListeners()) {
+            if (item.getId() == id) {
+                listener = item;
+            }
+        }
+        return listener;
+    }
+
+    public Order getActiveOrderFromId(int id) {
         Order order = new Order();
-        for (Order item: getClosedOrders()) {if (item.getId() ==id){order = item;}}
-        return order;}
+        for (Order item : getActiveOrders()) {
+            if (item.getId() == id) {
+                order = item;
+            }
+        }
+        return order;
+    }
+
+    public Order getClosedOrdersFromId(int id) {
+        Order order = new Order();
+        for (Order item : getClosedOrders()) {
+            if (item.getId() == id) {
+                order = item;
+            }
+        }
+        return order;
+    }
+
     public boolean checkIdBook(int sel) {
-        for (Book item:books) {if (item.getId()==sel){return true;}}
-        return false;}
+        for (Book item : books) {
+            if (item.getId() == sel) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public boolean checkIdListener(int sel) {
-        for (Listener item:listeners) {if (item.getId()==sel){return true;}}
-        return false;}
+        for (Listener item : listeners) {
+            if (item.getId() == sel) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-    public  boolean checkIdActiveOrders(int sel) {
-        for (Order item:activeOrders) {if (item.getId()==sel){return true;}}
-        return false;}
-    public  boolean checkIdClosedOrders(int sel) {
-        for (Order item:closedOrders) {if (item.getId()==sel){return true;}}
-        return false;}
+    public boolean checkIdActiveOrders(int sel) {
+        for (Order item : activeOrders) {
+            if (item.getId() == sel) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-    public void updateMaxIdBook(){
+    public boolean checkIdClosedOrders(int sel) {
+        for (Order item : closedOrders) {
+            if (item.getId() == sel) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void updateMaxIdBook() {
         int max = 0;
-        for (Book item:books)
-            {if (max<item.getId()) {max = item.getId();}}
-        booksMaxId = max;}
+        for (Book item : books) {
+            if (max < item.getId()) {
+                max = item.getId();
+            }
+        }
+        booksMaxId = max;
+    }
 
-    public void updateMaxIdListener(){
+    public void updateMaxIdListener() {
         int max = 0;
-        for (Listener item:listeners)
-            {if (max<item.getId()) {max = item.getId();}}
-        listenerMaxId = max;}
+        for (Listener item : listeners) {
+            if (max < item.getId()) {
+                max = item.getId();
+            }
+        }
+        listenerMaxId = max;
+    }
 
-    public void updateMaxIdOrder(){
+    public void updateMaxIdOrder() {
         int max = 0;
-        for (Order item:activeOrders)
-            {if(max<item.getId()){max = item.getId();}}
-        for (Order item:closedOrders)
-        {if(max<item.getId()){max = item.getId();}}
-        ordersMaxId = max;}
+        for (Order item : activeOrders) {
+            if (max < item.getId()) {
+                max = item.getId();
+            }
+        }
+        for (Order item : closedOrders) {
+            if (max < item.getId()) {
+                max = item.getId();
+            }
+        }
+        ordersMaxId = max;
+    }
 
     public int getId() {
         return id;
@@ -161,6 +228,7 @@ public class Library implements Serializable {
     public void setChangesLog(String changesLog) {
         this.changesLog = changesLog;
     }
+
     public ArrayList<Order> getClosedOrders() {
         return closedOrders;
     }
@@ -168,7 +236,6 @@ public class Library implements Serializable {
     public void setClosedOrders(ArrayList<Order> closedOrders) {
         this.closedOrders = closedOrders;
     }
-
 
 
 }

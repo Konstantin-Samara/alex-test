@@ -66,16 +66,19 @@ public class Menu {
 
         return commands;}
 
-    public void getMainMenu(String str){
-        List<Command> commands = new ArrayList<>();
+    public void getMainMenu(ArrayList<String[]> str){
+
+        List<Command> commands = createMainMenu();
         int sel = -1;
-            commands = createMainMenu();
-            System.out.println("Список доступных библиотек : \n"+str);
+            System.out.println("Список доступных библиотек :");
+        for (String[] item:str) {System.out.println("( ID:"+item[0]+" ) "+item[1]);}
             for (int i = 0; i < commands.size(); i++) {
                 System.out.println(i+1+". "+commands.get(i).label());}
             sel = Inputs.my_input(true,"Выберите пункт меню : ",1,commands.size());
             if (sel!=0) {commands.get(sel-1).execute();}
+
     }
+
     public List<Command> createBookMenu(){
         List<Command> commands = new ArrayList<>();
 

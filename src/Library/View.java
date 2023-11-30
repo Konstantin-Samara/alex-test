@@ -1,7 +1,6 @@
 package Library;
 
-import Library.VIEW.SWING_VIEW.SwingConfirm;
-import Library.VIEW.SWING_VIEW.SwingMessage;
+import Library.VIEW.SWING_VIEW.*;
 import Library.VIEW.VIEW_MODELS.Menu;
 import Library.VIEW.VIEW_MODELS.ViewModels;
 import Library.VIEW.VIEW_MODELS.Inputs;
@@ -11,102 +10,141 @@ import java.util.ArrayList;
 
 public class View {
     public Presenter presenter;
+    public ArrayList<String[]> catalog;
+    public ArrayList<String[]> reestr;
+    public String libraryName;
+    private ArrayList<String[]> activeOrders;
+
+
+
     View(Presenter p){
         this.presenter = p;
     }
     public boolean confirm(String s){
         boolean flag = false;
-            if (Inputs.my_input(true,s+" (Да-1/Нет-0) : ",0,1)==1){flag = true;};
-        return
-//                new SwingConfirm(s).start();
-                flag;
-                }
+            if (Inputs.my_input(true,s+" (Да-1/Нет-0) : ",0,1)==1)
+                {flag = true;}
+        return flag;}
+
     public void printMessage(String s){
-        ViewModels.printMessage(s);
-    }
+        if (presenter.isSwing()){new SwingMessage(s);}
+        else {ViewModels.printMessage(s);}}
 
     public void getInfoBook(){
         int minId = presenter.getLibrary().getBooks().get(0).getId();
         int maxId = presenter.getLibrary().getBooksMaxId();
         int sel = Inputs.my_input(true,"Введите ID книги : ",minId,maxId);
-        ViewModels.printMessage(presenter.getInfoBook(sel));}
+        printMessage(presenter.getInfoBook(sel));}
+    public ArrayList<String[]>[] getInfoBookSwing(int selBook)
+        {return presenter.getInfoBookSwing(selBook);}
 
     public void getInfoListener(){
         int minId = presenter.getLibrary().getListeners().get(0).getId();
         int maxId = presenter.getLibrary().getListenerMaxId();
         int sel = Inputs.my_input(true,"Введите ID читателя : ",minId,maxId);
-        ViewModels.printMessage(presenter.getInfoListener(sel));}
+        printMessage(presenter.getInfoListener(sel));}
+    public ArrayList<String[]>[] getInfoListenerSwing(int sel)
+        {return presenter.getInfoListenerSwing(sel);}
 
 
     public void getInfoOrder(){
         int minId = presenter.getLibrary().getActiveOrderFromId(0).getId();
         int maxId = presenter.getLibrary().getOrdersMaxId();
         int sel = Inputs.my_input(true,"Введите ID выдачи : ",minId,maxId);
-        ViewModels.printMessage(presenter.getInfoOrder(sel));}
+        printMessage(presenter.getInfoOrder(sel));}
+    public String[] getInfoActiveOrderSwing(int sel) {
+        return presenter.getInfoActiveOrderSwing(sel);}
 
-    public void selectLibrary() {
-        int sel = Inputs.my_input(true,"Введите ID библиотеки : ",
-        presenter.getListLibrary().getNotes().get(0).getId(),
-        presenter.getListLibrary().getMaxID());
+    public void selectLibrary(int sel) {
+       if (!presenter.isSwing()) {
+            sel = Inputs.my_input(true,"Введите ID библиотеки : ",
+            presenter.getListLibrary().getNotes().get(0).getId(),
+            presenter.getListLibrary().getMaxID());}
         presenter.selectLibrary(sel);}
 
     public void getLibraryMenu(String s){
-        Menu menu = new Menu(this);
-        menu.getLibraryMenu(s);}
-    public void getMainMenu(String str){
-        Menu menu = new Menu(this);
-        menu.getMainMenu(str);}
+        if (presenter.isSwing()){
+            getCatalog();getReestr();getList();
+            libraryName = s;
+            new SwingLibraryMenu(this,libraryName,catalog,reestr,activeOrders);}
+        else {
+            Menu menu = new Menu(this);
+            menu.getLibraryMenu(s);
+            presenter.getMainMenu();}
+    }
+    public void getMainMenu(ArrayList<String[]> arr){
+        if (presenter.isSwing())
+            {new SwingMainMenu(this,arr);}
+        else {
+            Menu menu = new Menu(this);
+            menu.getMainMenu(arr);}}
+
     public void giveBook() {
-        ViewModels.printMessage(presenter.giveBook(ViewModels.giveBook(
+        printMessage(presenter.giveBook(ViewModels.giveBook(
         presenter.getLibrary().getOrdersMaxId(), presenter.getLibrary().getBooks().get(0).getId(),
         presenter.getLibrary().getBooksMaxId(), presenter.getLibrary().getListeners().get(0).getId(),
         presenter.getLibrary().getListenerMaxId())));}
     public void ReturnBook() {
-        ViewModels.printMessage(presenter.ReturnBook(ViewModels.returnBook(
+        printMessage(presenter.ReturnBook(ViewModels.returnBook(
         presenter.getLibrary().getActiveOrders().get(0).getId(),
         presenter.getLibrary().getOrdersMaxId())));}
 
     public void close()
         {presenter.close();}
-    public void getCatalog()
-        {ViewModels.printMessage(presenter.getCatalog());}
-    public void getReestr()
-        {ViewModels.printMessage(presenter.getReestr());}
+
+    public void getCatalog(){
+        catalog = new ArrayList<>();
+        catalog = presenter.getCatalog();
+        if (!presenter.isSwing()) {
+            String s ="";
+            for (String[] item:catalog)
+                {s=s+"( ID:"+item[0]+" ) "+item[1]+" "+item[2]+"\n";}
+            printMessage(s);}
+    }
+    public void getReestr(){
+        reestr = new ArrayList<>();
+        reestr = presenter.getReestr();
+        if (!presenter.isSwing()) {
+            String s ="";
+            for (String[] item:reestr)
+            {s=s+"( ID:"+item[0]+" ) "+item[1]+" "+item[2]+"\n";}
+            printMessage(s);}
+    }
 
     public void addBook()
-        {ViewModels.printMessage(
+        {printMessage(
                 presenter.addBook(
                         ViewModels.addBook(presenter.getLibrary().getBooksMaxId())));}
 
     public void addListener()
-        {ViewModels.printMessage(presenter.addListener(ViewModels.addListener(
+        {printMessage(presenter.addListener(ViewModels.addListener(
                 presenter.getLibrary().getListenerMaxId())));}
     public void removeBook() {
         int minBookId = presenter.getLibrary().getBooks().get(0).getId();
         int maxBookId = presenter.getLibrary().getBooksMaxId();
         int sel = Inputs.my_input(true,"Введите ID книги для удаления : ",minBookId,maxBookId);
-        ViewModels.printMessage(presenter.removeBook(sel));}
+        printMessage(presenter.removeBook(sel));}
 
     public void removeListener() {
         int minListenerId = presenter.getLibrary().getListeners().get(0).getId();
         int maxListenerId = presenter.getLibrary().getListenerMaxId();
         int sel = Inputs.my_input(true,"Введите ID читателя для удаления : ",minListenerId,maxListenerId);
-        ViewModels.printMessage(presenter.removeListener(sel));}
+        printMessage(presenter.removeListener(sel));}
 
     public void removeLibrary() {
         int minLibraryId = presenter.getListLibrary().getNotes().get(0).getId();
         int maxLibraryId = presenter.getListLibrary().getMaxID();
         int sel = Inputs.my_input(true,"Введите ID библиотеки для удаления : ",minLibraryId,maxLibraryId);
-        ViewModels.printMessage(presenter.removeLibrary(sel,true));
-        presenter.pressButton();}
+        printMessage(presenter.removeLibrary(sel,true));
+        presenter.getMainMenu();}
 
     public void mergeLibrary() {
         int minLibraryId = presenter.getListLibrary().getNotes().get(0).getId();
         int maxLibraryId = presenter.getListLibrary().getMaxID();
         int sel = Inputs.my_input(true,"Введите ID базовой библиотеки для слияния : ",minLibraryId,maxLibraryId);
         int sel1 = Inputs.my_input(true,"Введите ID присоединяемой библиотеки : ",minLibraryId,maxLibraryId);
-        ViewModels.printMessage(presenter.mergeLibrary(sel,sel1));
-        presenter.pressButton();}
+        printMessage(presenter.mergeLibrary(sel,sel1));
+        presenter.getMainMenu();}
 
     public void addLibrary() {
         String s = ViewModels.addLibrary(presenter.getListLibrary().getMaxID());
@@ -116,25 +154,32 @@ public class View {
     public void exit()
         {presenter.exit();}
 
-    public void getList()
-        {ViewModels.printMessage(presenter.getList());}
+    public void getList(){
+        activeOrders = new ArrayList<>();
+        activeOrders = presenter.getList();
+        if (!presenter.isSwing()){
+            String s ="";
+            for (String[] item:activeOrders)
+            {s=s+"( ID:"+item[0]+" ) "+item[1]+" "+item[2]+" --- "+item[3]+" "+item[4]+"\n";}
+            printMessage(s);}
+        }
 
     public void removeOneBook() {
         int minBookId = presenter.getLibrary().getBooks().get(0).getId();
         int maxBookId = presenter.getLibrary().getBooksMaxId();
         int sel = Inputs.my_input(true,"Введите ID книги для удаления экземпляра : ",minBookId,maxBookId);
-        ViewModels.printMessage(presenter.removeOneBook(sel));}
+        printMessage(presenter.removeOneBook(sel));}
 
     public void editBook() {
         int minBookId = presenter.getLibrary().getBooks().get(0).getId();
         int maxBookId = presenter.getLibrary().getBooksMaxId();
         int sel = Inputs.my_input(true,"Введите ID книги для редактирования : ",minBookId,maxBookId);
-        ViewModels.printMessage(presenter.editBook(sel));}
+        printMessage(presenter.editBook(sel));}
     public void editListener() {
         int minListenerId = presenter.getLibrary().getListeners().get(0).getId();
         int maxListenerId = presenter.getLibrary().getListenerMaxId();
         int sel = Inputs.my_input(true,"Введите ID читателя для редактирования : ",minListenerId,maxListenerId);
-        ViewModels.printMessage(presenter.editListener(sel));}
+        printMessage(presenter.editListener(sel));}
 
     public ArrayList<String> startBookEditForm() {
         ArrayList<String> list = new ArrayList<>();
@@ -160,4 +205,15 @@ public class View {
     public void ListenerMenu() {
         Menu menu = new Menu(this);
         menu.getListenerMenu(presenter.getLibrary().getName());}
+
+    public String getLibraryName() {
+        return libraryName;
+    }
+
+    public void setLibraryName(String libraryName) {
+        this.libraryName = libraryName;
+    }
+
+
+
 }

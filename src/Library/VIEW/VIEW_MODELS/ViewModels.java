@@ -6,7 +6,7 @@ import Library.View;
 import java.util.ArrayList;
 
 public class ViewModels {
-    View view;
+    static View view;
     public ViewModels(View v) {
         this.view = v;
     }
@@ -14,10 +14,8 @@ public class ViewModels {
     public static String addLibrary(int maxID)
         {return Inputs.my_input_str(true,"ID : "+(maxID+1)+". Название библиотеки : ");}
 
-    public static void printMessage(String str){
-//        new SwingMessage(str);
-        System.out.println(str);
-    }
+    public static void printMessage(String str)
+        {System.out.println(str);}
 
     public static ArrayList<String> addBook(int maxBookId){
         ArrayList<String> book = new ArrayList<>();

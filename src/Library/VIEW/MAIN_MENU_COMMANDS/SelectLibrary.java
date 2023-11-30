@@ -15,7 +15,7 @@ public class SelectLibrary implements Command {
 
     @Override
     public void execute() {
-        view.selectLibrary();
+        view.selectLibrary(0);
 
     }
 }

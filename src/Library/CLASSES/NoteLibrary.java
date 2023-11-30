@@ -37,6 +37,6 @@ public class NoteLibrary implements Serializable {
     }
     @Override
     public String toString(){
-        return "ID : "+this.id+" name : "+this.name/*+" fileName : "+this.fileName*/;
+        return "ID : "+this.id+" name : "+this.name;
     }
 }
